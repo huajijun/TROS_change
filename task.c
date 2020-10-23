@@ -263,3 +263,193 @@ StackType_t *pxTopOfStack;
 
 	return xReturn;
 }
+
+
+
+void vTaskSwitchContext( void )
+{
+	if( uxSchedulerSuspended != ( UBaseType_t ) pdFALSE )
+	{
+		/* The scheduler is currently suspended - do not allow a context
+		switch. */
+		xYieldPending = pdTRUE;
+	}
+	else
+	{
+		xYieldPending = pdFALSE;
+		traceTASK_SWITCHED_OUT();
+
+		#if ( configGENERATE_RUN_TIME_STATS == 1 )
+		{
+				#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
+					portALT_GET_RUN_TIME_COUNTER_VALUE( ulTotalRunTime );
+				#else
+					ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+				#endif
+
+				/* Add the amount of time the task has been running to the
+				accumulated	time so far.  The time the task started running was
+				stored in ulTaskSwitchedInTime.  Note that there is no overflow
+				protection here	so count values are only valid until the timer
+				overflows.  The guard against negative values is to protect
+				against suspect run time stat counter implementations - which
+				are provided by the application, not the kernel. */
+				if( ulTotalRunTime > ulTaskSwitchedInTime )
+				{
+					pxCurrentTCB->ulRunTimeCounter += ( ulTotalRunTime - ulTaskSwitchedInTime );
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+				ulTaskSwitchedInTime = ulTotalRunTime;
+		}
+		#endif /* configGENERATE_RUN_TIME_STATS */
+
+		/* Check for stack overflow, if configured. */
+		taskCHECK_FOR_STACK_OVERFLOW();
+
+		/* Select a new task to run using either the generic C or port
+		optimised asm code. */
+		taskSELECT_HIGHEST_PRIORITY_TASK();
+		traceTASK_SWITCHED_IN();
+
+		#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		{
+			/* Switch Newlib's _impure_ptr variable to point to the _reent
+			structure specific to this task. */
+			_impure_ptr = &( pxCurrentTCB->xNewLib_reent );
+		}
+		#endif /* configUSE_NEWLIB_REENTRANT */
+	}
+}
+
+
+
+static void prvInitialiseTCBVariables( TCB_t * const pxTCB, const char * const pcName, UBaseType_t uxPriority, const MemoryRegion_t * const xRegions, const uint16_t usStackDepth ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+{
+UBaseType_t x;
+
+	/* Store the task name in the TCB. */
+	for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
+	{
+		pxTCB->pcTaskName[ x ] = pcName[ x ];
+
+		/* Don't copy all configMAX_TASK_NAME_LEN if the string is shorter than
+		configMAX_TASK_NAME_LEN characters just in case the memory after the
+		string is not accessible (extremely unlikely). */
+		if( pcName[ x ] == 0x00 )
+		{
+			break;
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+	}
+
+	/* Ensure the name string is terminated in the case that the string length
+	was greater or equal to configMAX_TASK_NAME_LEN. */
+	pxTCB->pcTaskName[ configMAX_TASK_NAME_LEN - 1 ] = '\0';
+
+	/* This is used as an array index so must ensure it's not too large.  First
+	remove the privilege bit if one is present. */
+	if( uxPriority >= ( UBaseType_t ) configMAX_PRIORITIES )
+	{
+		uxPriority = ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) 1U;
+	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
+
+	pxTCB->uxPriority = uxPriority;
+	#if ( configUSE_MUTEXES == 1 )
+	{
+		pxTCB->uxBasePriority = uxPriority;
+		pxTCB->uxMutexesHeld = 0;
+	}
+	#endif /* configUSE_MUTEXES */
+
+	vListInitialiseItem( &( pxTCB->xGenericListItem ) );
+	vListInitialiseItem( &( pxTCB->xEventListItem ) );
+
+	/* Set the pxTCB as a link back from the ListItem_t.  This is so we can get
+	back to	the containing TCB from a generic item in a list. */
+	listSET_LIST_ITEM_OWNER( &( pxTCB->xGenericListItem ), pxTCB );
+
+	/* Event lists are always in priority order. */
+	listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+	listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
+
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+	{
+		pxTCB->uxCriticalNesting = ( UBaseType_t ) 0U;
+	}
+	#endif /* portCRITICAL_NESTING_IN_TCB */
+
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+	{
+		pxTCB->pxTaskTag = NULL;
+	}
+	#endif /* configUSE_APPLICATION_TASK_TAG */
+
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+	{
+		pxTCB->ulRunTimeCounter = 0UL;
+	}
+	#endif /* configGENERATE_RUN_TIME_STATS */
+
+	#if ( portUSING_MPU_WRAPPERS == 1 )
+	{
+		vPortStoreTaskMPUSettings( &( pxTCB->xMPUSettings ), xRegions, pxTCB->pxStack, usStackDepth );
+	}
+	#else /* portUSING_MPU_WRAPPERS */
+	{
+		( void ) xRegions;
+		( void ) usStackDepth;
+	}
+	#endif /* portUSING_MPU_WRAPPERS */
+
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
+	{
+		for( x = 0; x < ( UBaseType_t ) configNUM_THREAD_LOCAL_STORAGE_POINTERS; x++ )
+		{
+			pxTCB->pvThreadLocalStoragePointers[ x ] = NULL;
+		}
+	}
+	#endif
+
+	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
+	{
+		pxTCB->ulNotifiedValue = 0;
+		pxTCB->eNotifyState = eNotWaitingNotification;
+	}
+	#endif
+
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+	{
+		/* Initialise this task's Newlib reent structure. */
+		_REENT_INIT_PTR( ( &( pxTCB->xNewLib_reent ) ) );
+	}
+	#endif /* configUSE_NEWLIB_REENTRANT */
+}
+
+
+
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
+{
+	/* Simulate the stack frame as it would be created by a context switch
+	interrupt. */
+	register int *tp asm("x3");
+	pxTopOfStack--;
+	*pxTopOfStack = (portSTACK_TYPE)pxCode;			/* Start address */
+	pxTopOfStack -= 22;
+	*pxTopOfStack = (portSTACK_TYPE)pvParameters;	/* Register a0 */
+	pxTopOfStack -= 6;
+	*pxTopOfStack = (portSTACK_TYPE)tp; /* Register thread pointer */
+	pxTopOfStack -= 3;
+	*pxTopOfStack = (portSTACK_TYPE)prvTaskExitError; /* Register ra */
+	
+	return pxTopOfStack;
+}

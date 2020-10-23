@@ -1,13 +1,103 @@
 /* length */
+
+static QueueHandle_t xTestQueue;
+
+
+#define queueYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
+
+#define portYIELD_WITHIN_API portYIELD
+#define portYIELD()					vPortYield()
+
+
+#define taskENTER_CRITICAL()		portENTER_CRITICAL()
+#define taskEXIT_CRITICAL()			portEXIT_CRITICAL()
+
+#define portENTER_CRITICAL()					vTaskEnterCritical()
+
+
+#define portEXIT_CRITICAL()						vTaskExitCritical()
+
+
+	void vTaskEnterCritical( void )
+	{
+		portDISABLE_INTERRUPTS();
+
+		if( xSchedulerRunning != pdFALSE )
+		{
+			( pxCurrentTCB->uxCriticalNesting )++;
+
+			/* This is not the interrupt safe version of the enter critical
+			function so	assert() if it is being called from an interrupt
+			context.  Only API functions that end in "FromISR" can be used in an
+			interrupt.  Only assert if the critical nesting count is 1 to
+			protect against recursive calls if the assert function also uses a
+			critical section. */
+			if( pxCurrentTCB->uxCriticalNesting == 1 )
+			{
+				portASSERT_IF_IN_ISR();
+			}
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+	}
+	void vTaskExitCritical( void )
+	{
+		if( xSchedulerRunning != pdFALSE )
+		{
+			if( pxCurrentTCB->uxCriticalNesting > 0U )
+			{
+				( pxCurrentTCB->uxCriticalNesting )--;
+
+				if( pxCurrentTCB->uxCriticalNesting == 0U )
+				{
+					portENABLE_INTERRUPTS();
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+	}
+
+
+
 #define queueQUEUE_TYPE_BASE				( ( uint8_t ) 0U )
+
+#define xQueueReceive( xQueue, pvBuffer, xTicksToWait ) xQueueGenericReceive( ( xQueue ), ( pvBuffer ), ( xTicksToWait ), pdFALSE )
+
 #define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
 
 typedef void * QueueHandle_t;
 
-typedef long BaseType_t;          
+typedef long BaseType_t;     
+
 typedef unsigned long UBaseType_t;
+
+#define configUSE_QUEUE_SETS 0
+
+
 #define queueQUEUE_TYPE_BASE                ( ( uint8_t ) 0U )
+
+#define	queueSEND_TO_BACK		( ( BaseType_t ) 0 )
+#define	queueSEND_TO_FRONT		( ( BaseType_t ) 1 )
+#define queueOVERWRITE			( ( BaseType_t ) 2 )
+
 #define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
+
+#define xQueueSend( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
+
+
 #define bktQUEUE_LENGTH             ( 5 )
 
 #define configQUEUE_REGISTRY_SIZE 8
