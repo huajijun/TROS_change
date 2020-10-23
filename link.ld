@@ -1,12 +1,12 @@
 OUTPUT_ARCH("riscv")
-ENTRY(_stage0)
+ENTRY(_mstart)
 
 _STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x1000;
 
 SECTIONS
 {
-	. = /* XIP address*/
-	.text : {*(.text)}
+	. = 0x10000000;
+	.text : {	*(.text)	}
 
 	.data : {
 	_gp = . + 0x800;
@@ -20,8 +20,13 @@ SECTIONS
        _stack = .;
        __stack = _stack;
     }
+    
+    .bss : {
+    	. = ALIGN(4);
+    	__bss_start = .;
+       *(.bss)
+       . = ALIGN(4);
+       __bss_end = .; 
+    }
 
-	start_addr = .
-	.payload : { *(.payload)	}
-	end_addr = .
 }

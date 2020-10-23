@@ -1,3 +1,8 @@
+#include "heap2.h"
+#define portBYTE_ALIGNMENT	8
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 100 * 1024 ) )
+#define portBYTE_ALIGNMENT_MASK ( 0x0007 )
+
 typedef struct A_BLOCK_LINK
 {
 	struct A_BLOCK_LINK *pxNextFreeBlock;	/*<< The next free block in the list. */
@@ -12,21 +17,21 @@ static BlockLink_t xStart, xEnd;
 /* Allocate the memory for the heap. */
 static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 100 * 1024 ) )
+
 
 /* A few bytes might be lost to byte aligning the heap start address. */
 #define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 static size_t xFreeBytesRemaining = configADJUSTED_HEAP_SIZE;
 
-#ifdef __riscv64
+/*#ifdef __riscv64
 	#define portBYTE_ALIGNMENT	8
 #else
 	#define portBYTE_ALIGNMENT	4
-#endif
-#define portBYTE_ALIGNMENT_MASK ( 0x0007 )
+#endif*/
 
-#define portPOINTER_SIZE_TYPE	uint32_t
+
+//#define portPOINTER_SIZE_TYPE	uint32_t
 
 #define prvInsertBlockIntoFreeList( pxBlockToInsert )								\
 {																					\
@@ -77,10 +82,10 @@ void *pvPortMalloc( size_t xWantedSize )
 	static bool xHeapHasBeenInitialised = false;
 	void *pvReturn = NULL;
 	/* init memory if not */
-	if( xHeapHasBeenInitialised == pdFALSE )
+	if( xHeapHasBeenInitialised == false)
 	{
 		prvHeapInit();
-		xHeapHasBeenInitialised = pdTRUE;
+		xHeapHasBeenInitialised = true;
 	}
 
 
