@@ -106,7 +106,17 @@
 	addi	sp, sp, REGBYTES * 32
 	eret
 	.endm
+			
+.macro portSAVE_EPC
+  	csrr	t0, mepc
+	STORE	t0, 31 * REGBYTES(sp)
+	.endm
 
+TIMER_CMP_INT:
+	portSAVE_CONTEXT
+	portSAVE_EPC
+	jal	vPortSysTickHandler
+	portRESTORE_CONTEXT
 
 
 vPortYield:

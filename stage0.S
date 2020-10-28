@@ -1,3 +1,17 @@
+#ifdef __riscv_xlen
+#define  STORE sd
+#define LOAD    ld
+#define REGBYTES    8
+#else
+#define  STORE sw
+#define LOAD    lw
+#define REGBYTES    4
+#endif
+.align 6
+.section .text,"ax"
+    machine_entry:
+    j trap_entry
+    
 .align 6
 	.section .text,"ax",@progbits
 	.globl _mstart
@@ -36,6 +50,11 @@ _mstart:
     li	x31, 0
 
 
+    la a1 , machine_trap_entry
+    csrw mtvec , a1
+    li a1 , 0
+
+
     /* initialize global pointer */
     la  gp, _gp
 
@@ -62,3 +81,107 @@ fill_block:
     j       fill_block
 fb_end:
     ret
+
+interrupt:
+
+    srli    t0,t0,1
+    beq     t0,x0,softwareInterrupt
+    LOAD    t0, 0x0(sp)
+    addi    sp, sp, REGBYTES
+    j               TIMER_CMP_INT
+    mret
+
+
+
+softwareInterrupt:
+    mret
+
+
+trap_entry:
+    
+    addi sp,    sp, -REGBYTES
+    STORE   t0, 0(sp)
+    csrr    t0, mcause
+    blt  t0 , x0, interrupt
+    LOAD   t0, 0(sp)
+    addi sp,    sp, REGBYTES
+
+    addi sp, sp, -REGBYTES*31
+    STORE x1, 1*REGBYTES(sp)
+    STORE x2, 2*REGBYTES(sp)
+    STORE x3, 3*REGBYTES(sp)
+    STORE x4, 4*REGBYTES(sp)
+    STORE x5, 5*REGBYTES(sp)
+    STORE x6, 6*REGBYTES(sp)
+    STORE x7, 7*REGBYTES(sp)
+    STORE x8, 8*REGBYTES(sp)
+    STORE x9, 9*REGBYTES(sp)
+    STORE x10, 10*REGBYTES(sp)
+    STORE x11, 11*REGBYTES(sp)
+    STORE x12, 12*REGBYTES(sp)
+    STORE x13, 13*REGBYTES(sp)
+    STORE x14, 14*REGBYTES(sp)
+    STORE x15, 15*REGBYTES(sp)
+    STORE x16, 16*REGBYTES(sp)
+    STORE x17, 17*REGBYTES(sp)
+    STORE x18, 18*REGBYTES(sp)
+    STORE x19, 19*REGBYTES(sp)
+    STORE x20, 20*REGBYTES(sp)
+    STORE x21, 21*REGBYTES(sp)
+    STORE x22, 22*REGBYTES(sp)
+    STORE x23, 23*REGBYTES(sp)
+    STORE x24, 24*REGBYTES(sp)
+    STORE x25, 25*REGBYTES(sp)
+    STORE x26, 26*REGBYTES(sp)
+    STORE x27, 27*REGBYTES(sp)
+    STORE x28, 28*REGBYTES(sp)
+    STORE x29, 29*REGBYTES(sp)
+    STORE x30, 30*REGBYTES(sp)
+    STORE x31, 31*REGBYTES(sp)
+
+
+    csrr a0, mcause
+    csrr a1, mepc
+    mv a2, sp
+    jal ulSyscallTrap
+
+    csrw mepc, a0
+
+    LOAD x1, 1*REGBYTES(sp)
+    LOAD x2, 2*REGBYTES(sp)
+    LOAD x3, 3*REGBYTES(sp)
+    LOAD x4, 4*REGBYTES(sp)
+    LOAD x5, 5*REGBYTES(sp)
+    LOAD x6, 6*REGBYTES(sp)
+    LOAD x7, 7*REGBYTES(sp)
+    LOAD x8, 8*REGBYTES(sp)
+    LOAD x9, 9*REGBYTES(sp)
+    LOAD x10, 10*REGBYTES(sp)
+    LOAD x11, 11*REGBYTES(sp)
+    LOAD x12, 12*REGBYTES(sp)
+    LOAD x13, 13*REGBYTES(sp)
+    LOAD x14, 14*REGBYTES(sp)
+    LOAD x15, 15*REGBYTES(sp)
+    LOAD x16, 16*REGBYTES(sp)
+    LOAD x17, 17*REGBYTES(sp)
+    LOAD x18, 18*REGBYTES(sp)
+    LOAD x19, 19*REGBYTES(sp)
+    LOAD x20, 20*REGBYTES(sp)
+    LOAD x21, 21*REGBYTES(sp)
+    LOAD x22, 22*REGBYTES(sp)
+    LOAD x23, 23*REGBYTES(sp)
+    LOAD x24, 24*REGBYTES(sp)
+    LOAD x25, 25*REGBYTES(sp)
+    LOAD x26, 26*REGBYTES(sp)
+    LOAD x27, 27*REGBYTES(sp)
+    LOAD x28, 28*REGBYTES(sp)
+    LOAD x29, 29*REGBYTES(sp)
+    LOAD x30, 30*REGBYTES(sp)
+    LOAD x31, 31*REGBYTES(sp)
+
+    addi sp, sp, REGBYTES*31
+    mret
+
+
+
+
