@@ -1,12 +1,4 @@
-#ifdef __riscv_xlen
-#define  STORE sd
-#define LOAD    ld
-#define REGBYTES    8
-#else
-#define  STORE sw
-#define LOAD    lw
-#define REGBYTES    4
-#endif
+#include "encoding.h"
 .align 6
 .section .text,"ax"
     machine_entry:

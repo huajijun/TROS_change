@@ -1,5 +1,5 @@
 all:
-	riscv64-ls-elf-gcc -nostartfiles -nostdlib stage0.S main.c heap2.c   -Tlink.ld -o test
+	riscv64-ls-elf-gcc -nostartfiles -nostdlib stage0.S main.c heap2.c  common.c list2.c para.S  queue2.c  task.c time.c -Tlink.ld -o test
 spike: all
 	spike -d -m0x10000000:0x10000000 test
 

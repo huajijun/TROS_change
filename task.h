@@ -1,4 +1,26 @@
+#include "common.h"
+#include "list2.h"
+#include "queue2.h"
+#ifndef TASK
+#define TASK
 #define xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( NULL ), ( NULL ) )
+static volatile UBaseType_t uxSchedulerSuspended    = ( UBaseType_t ) pdFALSE;
+typedef void * TaskHandle_t;
+typedef struct xMEMORY_REGION 
+{                             
+    void *pvBaseAddress;      
+    uint32_t ulLengthInBytes; 
+    uint32_t ulParameters;    
+} MemoryRegion_t;             
+
+typedef struct xTIME_OUT        
+{                               
+    BaseType_t xOverflowCount;  
+    TickType_t xTimeOnEntering; 
+} TimeOut_t;                    
+#define taskSCHEDULER_SUSPENDED     ( ( BaseType_t ) 0 )
+#define taskSCHEDULER_NOT_STARTED   ( ( BaseType_t ) 1 )
+#define taskSCHEDULER_RUNNING       ( ( BaseType_t ) 2 )
 
 typedef struct tskTaskControlBlock
 {
@@ -15,9 +37,8 @@ typedef struct tskTaskControlBlock
 	StackType_t			*pxStack;			/*< Points to the start of the stack. */
 	char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
-	#if ( portSTACK_GROWTH > 0 )
-		StackType_t		*pxEndOfStack;		/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
-	#endif
+	StackType_t		*pxEndOfStack;		/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
+	
 
 	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
 		UBaseType_t 	uxCriticalNesting; 	/*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
@@ -72,3 +93,4 @@ typedef tskTCB TCB_t;
 	traceMOVED_TASK_TO_READY_STATE( pxTCB );														\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
 	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) )
+#endif

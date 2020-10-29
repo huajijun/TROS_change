@@ -1,3 +1,5 @@
+
+#include "encoding.h"
 .global portSAVE_CONTEXT
 .global portRESTORE_CONTEXT
 .global TIMER_CMP_INT
@@ -6,6 +8,8 @@
 .global vTaskIncrementTick
 .global vPortEndScheduler
 .global xExitStack
+
+#define MSTATUS_PRV1 0x30 
 
 .macro portSAVE_CONTEXT
 	.global	pxCurrentTCB
@@ -104,7 +108,7 @@
 	LOAD	x31, 30 * REGBYTES(sp)
 
 	addi	sp, sp, REGBYTES * 32
-	eret
+	mret
 	.endm
 			
 .macro portSAVE_EPC
@@ -170,53 +174,3 @@ xPortStartScheduler:
 
 
 
-.macro portRESTORE_CONTEXT
-
-	.global	pxCurrentTCB
-	/* Load stack pointer from the current TCB */
-	LOAD	sp, pxCurrentTCB
-	LOAD	sp, 0x0(sp)
-
-	/* Load task program counter */
-	LOAD	t0, 31 * REGBYTES(sp)
-  	csrw	mepc, t0
-
-	/* Run in machine mode */
-  	li 		t0, MSTATUS_PRV1
-  	csrs	mstatus, t0
-
-	/* Restore registers,
-	   Skip global pointer because that does not change */
-	LOAD	x1, 0x0(sp)
-	LOAD	x4, 3 * REGBYTES(sp)
-	LOAD	x5, 4 * REGBYTES(sp)
-	LOAD	x6, 5 * REGBYTES(sp)
-	LOAD	x7, 6 * REGBYTES(sp)
-	LOAD	x8, 7 * REGBYTES(sp)
-	LOAD	x9, 8 * REGBYTES(sp)
-	LOAD	x10, 9 * REGBYTES(sp)
-	LOAD	x11, 10 * REGBYTES(sp)
-	LOAD	x12, 11 * REGBYTES(sp)
-	LOAD	x13, 12 * REGBYTES(sp)
-	LOAD	x14, 13 * REGBYTES(sp)
-	LOAD	x15, 14 * REGBYTES(sp)
-	LOAD	x16, 15 * REGBYTES(sp)
-	LOAD	x17, 16 * REGBYTES(sp)
-	LOAD	x18, 17 * REGBYTES(sp)
-	LOAD	x19, 18 * REGBYTES(sp)
-	LOAD	x20, 19 * REGBYTES(sp)
-	LOAD	x21, 20 * REGBYTES(sp)
-	LOAD	x22, 21 * REGBYTES(sp)
-	LOAD	x23, 22 * REGBYTES(sp)
-	LOAD	x24, 23 * REGBYTES(sp)
-	LOAD	x25, 24 * REGBYTES(sp)
-	LOAD	x26, 25 * REGBYTES(sp)
-	LOAD	x27, 26 * REGBYTES(sp)
-	LOAD	x28, 27 * REGBYTES(sp)
-	LOAD	x29, 28 * REGBYTES(sp)
-	LOAD	x30, 29 * REGBYTES(sp)
-	LOAD	x31, 30 * REGBYTES(sp)
-
-	addi	sp, sp, REGBYTES * 32
-	eret
-	.endm

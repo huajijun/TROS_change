@@ -1,7 +1,15 @@
 /* length */
+#include "list2.h"
+#include "common.h"
+#ifndef QUEUE
+#define QUEUE
+typedef void * QueueHandle_t;
 
-static QueueHandle_t xTestQueue;
-
+typedef struct QUEUE_REGISTRY_ITEM
+{
+	const char *pcQueueName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	QueueHandle_t xHandle;
+} xQueueRegistryItem;
 
 #define queueYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
 
@@ -18,67 +26,13 @@ static QueueHandle_t xTestQueue;
 #define portEXIT_CRITICAL()						vTaskExitCritical()
 
 
-	void vTaskEnterCritical( void )
-	{
-		portDISABLE_INTERRUPTS();
-
-		if( xSchedulerRunning != pdFALSE )
-		{
-			( pxCurrentTCB->uxCriticalNesting )++;
-
-			/* This is not the interrupt safe version of the enter critical
-			function so	assert() if it is being called from an interrupt
-			context.  Only API functions that end in "FromISR" can be used in an
-			interrupt.  Only assert if the critical nesting count is 1 to
-			protect against recursive calls if the assert function also uses a
-			critical section. */
-			if( pxCurrentTCB->uxCriticalNesting == 1 )
-			{
-				portASSERT_IF_IN_ISR();
-			}
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-	}
-	void vTaskExitCritical( void )
-	{
-		if( xSchedulerRunning != pdFALSE )
-		{
-			if( pxCurrentTCB->uxCriticalNesting > 0U )
-			{
-				( pxCurrentTCB->uxCriticalNesting )--;
-
-				if( pxCurrentTCB->uxCriticalNesting == 0U )
-				{
-					portENABLE_INTERRUPTS();
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-	}
-
-
-
 #define queueQUEUE_TYPE_BASE				( ( uint8_t ) 0U )
 
 #define xQueueReceive( xQueue, pvBuffer, xTicksToWait ) xQueueGenericReceive( ( xQueue ), ( pvBuffer ), ( xTicksToWait ), pdFALSE )
 
 #define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
 
-typedef void * QueueHandle_t;
+
 
 typedef long BaseType_t;     
 
@@ -86,6 +40,7 @@ typedef unsigned long UBaseType_t;
 
 #define configUSE_QUEUE_SETS 0
 
+#define tskIDLE_PRIORITY            ( ( UBaseType_t ) 0U )
 
 #define queueQUEUE_TYPE_BASE                ( ( uint8_t ) 0U )
 
@@ -96,19 +51,12 @@ typedef unsigned long UBaseType_t;
 #define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
 
 #define xQueueSend( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
-
+#define xQueueSendToBack( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
 
 #define bktQUEUE_LENGTH             ( 5 )
 
 #define configQUEUE_REGISTRY_SIZE 8
-QueueRegistryItem_t xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
 typedef xQueueRegistryItem QueueRegistryItem_t;
-
-typedef struct QUEUE_REGISTRY_ITEM
-{
-	const char *pcQueueName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-	QueueHandle_t xHandle;
-} xQueueRegistryItem;
 
 
 
@@ -116,15 +64,6 @@ typedef struct QUEUE_REGISTRY_ITEM
 /*
  * Definition of the type of queue used by the scheduler.
  */
-typedef struct xLIST
-{
-	listFIRST_LIST_INTEGRITY_CHECK_VALUE				/*< Set to a known value if configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
-	configLIST_VOLATILE UBaseType_t uxNumberOfItems;
-	ListItem_t * configLIST_VOLATILE pxIndex;			/*< Used to walk through the list.  Points to the last item returned by a call to listGET_OWNER_OF_NEXT_ENTRY (). */
-	MiniListItem_t xListEnd;							/*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
-	listSECOND_LIST_INTEGRITY_CHECK_VALUE				/*< Set to a known value if configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
-} List_t;
-
 
 typedef struct QueueDefinition
 {
@@ -158,9 +97,10 @@ typedef struct QueueDefinition
 	#endif
 
 } xQUEUE;
-
-
-typedef unsigned long UBaseType_t;
-typedef long BaseType_t;
 typedef xQUEUE Queue_t;
-typedef void * QueueHandle_t;
+
+static QueueHandle_t xTestQueue;
+
+QueueRegistryItem_t xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
+
+#endif

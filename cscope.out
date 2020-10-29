@@ -1,0 +1,4692 @@
+cscope 15 /work_base/TROS_change -q 0000000322 0000031820
+	@common.c
+
+1 
+	~"commÚ.h
+"
+
+2 
+	$memıy
+(* 
+des
+ , * 
+¤c
+, 
+numb”
+)
+
+4 
+i
+ = 0; i< 
+numb”
+; i++)
+
+6 *
+des
+++ = *
+¤c
+++;
+
+8 
+	}
+}
+
+	@common.h
+
+1 #iâdeà
+zzy
+
+
+2 
+	#zzy
+
+
+	)
+
+3 
+	#št8_t
+ 
+
+	)
+
+4 
+	#queueQUEUE_TYPE_BASE
+ ( ( 
+ušt8_t
+ ) 0U )
+
+	)
+
+5 
+	#cÚfigUSE_QUEUE_SETS
+ 0
+
+	)
+
+7 
+	#queueQUEUE_TYPE_BASE
+ ( ( 
+ušt8_t
+ ) 0U )
+
+	)
+
+9 
+	#queueSEND_TO_BACK
+ ( ( 
+Ba£Ty³_t
+ ) 0 )
+
+	)
+
+10 
+	#queueSEND_TO_FRONT
+ ( ( 
+Ba£Ty³_t
+ ) 1 )
+
+	)
+
+11 
+	#queueOVERWRITE
+ ( ( 
+Ba£Ty³_t
+ ) 2 )
+
+	)
+
+12 
+	#bktQUEUE_LENGTH
+ ( 5 )
+
+	)
+
+13 
+	#size_t
+ 
+
+	)
+
+14 
+	#ušt8_t
+ 
+
+	)
+
+15 
+	#NULL
+ 0
+
+	)
+
+16 
+	#pÜtPOINTER_SIZE_TYPE
+ 
+
+	)
+
+17 
+	#ušt16_t
+ 
+
+	)
+
+18 
+	#boŞ
+ 
+
+	)
+
+19 
+	#çl£
+ ()0
+
+	)
+
+20 
+	#Œue
+ ()1
+
+	)
+
+21 
+	#cÚfigQUEUE_REGISTRY_SIZE
+ 8
+
+	)
+
+22 
+	#ušt32_t
+ 
+
+	)
+
+23 
+	tUBa£Ty³_t
+;
+
+24 
+	tBa£Ty³_t
+;
+
+25 * 
+	tQueueHªdË_t
+;
+
+26 
+ušt32_t
+ 
+	tTickTy³_t
+;
+
+27 
+	#pdFALSE
+ 
+çl£
+;
+
+	)
+
+28 
+	#queueSEND_TO_BACK
+ ( ( 
+Ba£Ty³_t
+ ) 0 )
+
+	)
+
+29 
+	#queueSEND_TO_FRONT
+ ( ( 
+Ba£Ty³_t
+ ) 1 )
+
+	)
+
+30 
+	#queueOVERWRITE
+ ( ( 
+Ba£Ty³_t
+ ) 2 )
+
+	)
+
+	@heap2.c
+
+1 
+	~"h—p2.h
+"
+
+2 
+	#pÜtBYTE_ALIGNMENT
+ 8
+
+	)
+
+3 
+	#cÚfigTOTAL_HEAP_SIZE
+ ( ( 
+size_t
+ ) ( 100 * 1024 ) )
+
+	)
+
+4 
+	#pÜtBYTE_ALIGNMENT_MASK
+ ( 0x0007 )
+
+	)
+
+6 
+	sA_BLOCK_LINK
+
+
+8 
+A_BLOCK_LINK
+ *
+	mpxNextF»eBlock
+;
+
+9 
+size_t
+ 
+	mxBlockSize
+;
+
+10 } 
+	tBlockLšk_t
+;
+
+14 
+BlockLšk_t
+ 
+	gxS¹
+, 
+	gxEnd
+;
+
+18 
+ušt8_t
+ 
+	gucH—p
+[ 
+cÚfigTOTAL_HEAP_SIZE
+ ];
+
+23 
+	#cÚfigADJUSTED_HEAP_SIZE
+ ( 
+cÚfigTOTAL_HEAP_SIZE
+ - 
+pÜtBYTE_ALIGNMENT
+ )
+
+	)
+
+25 
+size_t
+ 
+	gxF»eBy‹sRemaššg
+ = 
+cÚfigADJUSTED_HEAP_SIZE
+;
+
+36 
+	#´vIn£¹BlockIÁoF»eLi¡
+Ğ
+pxBlockToIn£¹
+ ) \
+
+38 
+BlockLšk_t
+ *
+pxI‹¿tÜ
+; \
+
+39 
+size_t
+ 
+xBlockSize
+; \
+
+41 
+xBlockSize
+ = 
+pxBlockToIn£¹
+->xBlockSize; \
+
+45  
+pxI‹¿tÜ
+ = &
+xS¹
+;…xI‹¿tÜ->
+pxNextF»eBlock
+->
+xBlockSize
+ < xBlockSize;…xIterator =…xIterator->pxNextFreeBlock ) \
+
+52 
+pxBlockToIn£¹
+->
+pxNextF»eBlock
+ = 
+pxI‹¿tÜ
+->pxNextFreeBlock; \
+
+53 
+pxI‹¿tÜ
+->
+pxNextF»eBlock
+ = 
+pxBlockToIn£¹
+; \
+
+54 }
+
+	)
+
+57 cÚ¡ 
+ušt16_t
+ 
+	gh—pSTRUCT_SIZE
+ = ( (  ( 
+BlockLšk_t
+ ) + ( 
+pÜtBYTE_ALIGNMENT
+ - 1 ) ) & ~
+pÜtBYTE_ALIGNMENT_MASK
+ );
+
+58 
+	$´vH—pIn™
+( )
+
+60 
+BlockLšk_t
+* 
+pxFœ¡F»eBlock
+;
+
+61 
+ušt8_t
+ *
+pucAligÃdH—p
+;
+
+62 
+pucAligÃdH—p
+ = (
+ušt8_t
+*)(((
+pÜtPOINTER_SIZE_TYPE
+)&
+ucH—p
+[
+pÜtBYTE_ALIGNMENT
+])&(~(ÕÜtPOINTER_SIZE_TYPE)
+pÜtBYTE_ALIGNMENT_MASK
+ ) ) );
+
+64 
+xS¹
+.
+pxNextF»eBlock
+ = (*)
+pucAligÃdH—p
+;
+
+65 
+xS¹
+.
+xBlockSize
+ = 0;
+
+67 
+xEnd
+.
+pxNextF»eBlock
+ = 
+NULL
+;
+
+68 
+xEnd
+.
+xBlockSize
+ = 
+cÚfigADJUSTED_HEAP_SIZE
+;
+
+72 
+pxFœ¡F»eBlock
+ = ( * ) 
+pucAligÃdH—p
+;
+
+73 
+pxFœ¡F»eBlock
+->
+xBlockSize
+ = 
+cÚfigADJUSTED_HEAP_SIZE
+;
+
+74 
+pxFœ¡F»eBlock
+->
+pxNextF»eBlock
+ = &
+xEnd
+;
+
+76 
+	}
+}
+
+79 *
+	$pvPÜtM®loc
+Ğ
+size_t
+ 
+xWª‹dSize
+ )
+
+81 
+BlockLšk_t
+ *
+pxBlock
+, *
+pxP»viousBlock
+, *
+pxNewBlockLšk
+;
+
+82 
+boŞ
+ 
+xH—pHasB“nIn™Ÿli£d
+ = 
+çl£
+;
+
+83 *
+pvR‘uº
+ = 
+NULL
+;
+
+85 ifĞ
+xH—pHasB“nIn™Ÿli£d
+ =ğ
+çl£
+)
+
+87 
+	`´vH—pIn™
+();
+
+88 
+xH—pHasB“nIn™Ÿli£d
+ = 
+Œue
+;
+
+93 ifĞ
+xWª‹dSize
+ > 0 )
+
+95 
+xWª‹dSize
+ +ğ
+h—pSTRUCT_SIZE
+;
+
+98 ifĞĞ
+xWª‹dSize
+ & 
+pÜtBYTE_ALIGNMENT_MASK
+ ) != 0 )
+
+101 
+xWª‹dSize
+ +ğĞ
+pÜtBYTE_ALIGNMENT
+ - ( xWª‹dSiz& 
+pÜtBYTE_ALIGNMENT_MASK
+ ) );
+
+106 ifĞĞ
+xWª‹dSize
+ > 0 ) && ( xWª‹dSiz< 
+cÚfigADJUSTED_HEAP_SIZE
+ ) )
+
+110 
+pxP»viousBlock
+ = &
+xS¹
+;
+
+111 
+pxBlock
+ = 
+xS¹
+.
+pxNextF»eBlock
+;
+
+112  ( 
+pxBlock
+->
+xBlockSize
+ < 
+xWª‹dSize
+ ) && (…xBlock->
+pxNextF»eBlock
+ !ğ
+NULL
+ ) )
+
+114 
+pxP»viousBlock
+ = 
+pxBlock
+;
+
+115 
+pxBlock
+ =…xBlock->
+pxNextF»eBlock
+;
+
+119 ifĞ
+pxBlock
+ !ğ&
+xEnd
+ )
+
+123 
+pvR‘uº
+ = ( * ) ( ( ( 
+ušt8_t
+ * ) 
+pxP»viousBlock
+->
+pxNextF»eBlock
+ ) + 
+h—pSTRUCT_SIZE
+ );
+
+127 
+pxP»viousBlock
+->
+pxNextF»eBlock
+ = 
+pxBlock
+->pxNextFreeBlock;
+
+130 ifĞĞ
+pxBlock
+->
+xBlockSize
+ - 
+xWª‹dSize
+ ) > 
+h—pMINIMUM_BLOCK_SIZE
+ )
+
+135 
+pxNewBlockLšk
+ = ( * ) ( ( ( 
+ušt8_t
+ * ) 
+pxBlock
+ ) + 
+xWª‹dSize
+ );
+
+139 
+pxNewBlockLšk
+->
+xBlockSize
+ = 
+pxBlock
+->xBlockSiz- 
+xWª‹dSize
+;
+
+140 
+pxBlock
+->
+xBlockSize
+ = 
+xWª‹dSize
+;
+
+143 
+	`´vIn£¹BlockIÁoF»eLi¡
+ĞĞ
+pxNewBlockLšk
+ ) );
+
+146 
+xF»eBy‹sRemaššg
+ -ğ
+pxBlock
+->
+xBlockSize
+;
+
+151  
+pvR‘uº
+;
+
+153 
+	}
+}
+
+154 
+	$vPÜtF»e
+Ğ*
+pv
+ )
+
+156 
+ušt8_t
+ *
+puc
+ = ( ušt8_ˆ* ) 
+pv
+;
+
+157 
+BlockLšk_t
+ *
+pxLšk
+;
+
+158 ifĞ
+pv
+ !ğ
+NULL
+ )
+
+162 
+puc
+ -ğ
+h—pSTRUCT_SIZE
+;
+
+166 
+pxLšk
+ = ( * ) 
+puc
+;
+
+169 
+	`´vIn£¹BlockIÁoF»eLi¡
+ĞĞĞ
+BlockLšk_t
+ * ) 
+pxLšk
+ ) );
+
+170 
+xF»eBy‹sRemaššg
+ +ğ
+pxLšk
+->
+xBlockSize
+;
+
+173 
+	}
+}
+
+	@heap2.h
+
+1 
+	#size_t
+ 
+
+	)
+
+2 
+	#ušt8_t
+ 
+
+	)
+
+3 
+	#NULL
+ 0
+
+	)
+
+4 
+	#pÜtPOINTER_SIZE_TYPE
+ 
+
+	)
+
+5 
+	#ušt16_t
+ 
+
+	)
+
+6 
+	#boŞ
+ 
+
+	)
+
+7 
+	#çl£
+ ()0
+
+	)
+
+8 
+	#Œue
+ ()1
+
+	)
+
+9 
+	#h—pMINIMUM_BLOCK_SIZE
+ ( ( 
+size_t
+ ) ( 
+h—pSTRUCT_SIZE
+ * 2 ) )
+
+	)
+
+10 *
+pvPÜtM®loc
+Ğ
+size_t
+ 
+xWª‹dSize
+ );
+
+11 
+vPÜtF»e
+Ğ*
+pv
+ );
+
+	@list2.c
+
+1 
+	$vLi¡In™Ÿli£
+Ğ
+Li¡_t
+ * cÚ¡ 
+pxLi¡
+ )
+
+6 
+pxLi¡
+->
+pxIndex
+ = ( 
+Li¡I‹m_t
+ * ) &ĞpxLi¡->
+xLi¡End
+ );
+
+10 
+pxLi¡
+->
+xLi¡End
+.
+xI‹mV®ue
+ = 
+pÜtMAX_DELAY
+;
+
+14 
+pxLi¡
+->
+xLi¡End
+.
+pxNext
+ = ( 
+Li¡I‹m_t
+ * ) &(…xList->xListEnd );
+
+15 
+pxLi¡
+->
+xLi¡End
+.
+pxP»vious
+ = ( 
+Li¡I‹m_t
+ * ) &(…xList->xListEnd );
+
+17 
+pxLi¡
+->
+uxNumb”OfI‹ms
+ = ( 
+UBa£Ty³_t
+ ) 0U;
+
+23 
+	}
+}
+
+25 
+	$vLi¡In™Ÿli£I‹m
+Ğ
+Li¡I‹m_t
+ * cÚ¡ 
+pxI‹m
+ )
+
+28 
+pxI‹m
+->
+pvCÚš”
+ = 
+NULL
+;
+
+32 
+	`li¡SET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE
+Ğ
+pxI‹m
+ );
+
+33 
+	`li¡SET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE
+Ğ
+pxI‹m
+ );
+
+34 
+	}
+}
+
+37 
+	$vLi¡In£¹
+Ğ
+Li¡_t
+ * cÚ¡ 
+pxLi¡
+, 
+Li¡I‹m_t
+ * cÚ¡ 
+pxNewLi¡I‹m
+ )
+
+39 
+Li¡I‹m_t
+ *
+pxI‹¿tÜ
+;
+
+40 cÚ¡ 
+TickTy³_t
+ 
+xV®ueOfIn£¹iÚ
+ = 
+pxNewLi¡I‹m
+->
+xI‹mV®ue
+;
+
+56 ifĞ
+xV®ueOfIn£¹iÚ
+ =ğ
+pÜtMAX_DELAY
+ )
+
+58 
+pxI‹¿tÜ
+ = 
+pxLi¡
+->
+xLi¡End
+.
+pxP»vious
+;
+
+85  
+pxI‹¿tÜ
+ = ( 
+Li¡I‹m_t
+ * ) &Ğ
+pxLi¡
+->
+xLi¡End
+ );…xI‹¿tÜ->
+pxNext
+->
+xI‹mV®ue
+ <ğ
+xV®ueOfIn£¹iÚ
+;…xIterator =…xIterator->pxNext )
+
+92 
+pxNewLi¡I‹m
+->
+pxNext
+ = 
+pxI‹¿tÜ
+->pxNext;
+
+93 
+pxNewLi¡I‹m
+->
+pxNext
+->
+pxP»vious
+ =…xNewListItem;
+
+94 
+pxNewLi¡I‹m
+->
+pxP»vious
+ = 
+pxI‹¿tÜ
+;
+
+95 
+pxI‹¿tÜ
+->
+pxNext
+ = 
+pxNewLi¡I‹m
+;
+
+99 
+pxNewLi¡I‹m
+->
+pvCÚš”
+ = ( * ) 
+pxLi¡
+;
+
+101 Ğ
+pxLi¡
+->
+uxNumb”OfI‹ms
+ )++;
+
+102 
+	}
+}
+
+104 
+	$vLi¡In£¹End
+Ğ
+Li¡_t
+ * cÚ¡ 
+pxLi¡
+, 
+Li¡I‹m_t
+ * cÚ¡ 
+pxNewLi¡I‹m
+ )
+
+106 
+Li¡I‹m_t
+ * cÚ¡ 
+pxIndex
+ = 
+pxLi¡
+->pxIndex;
+
+117 
+pxNewLi¡I‹m
+->
+pxNext
+ = 
+pxIndex
+;
+
+118 
+pxNewLi¡I‹m
+->
+pxP»vious
+ = 
+pxIndex
+->pxPrevious;
+
+121 
+	`mtCOVERAGE_TEST_DELAY
+();
+
+123 
+pxIndex
+->
+pxP»vious
+->
+pxNext
+ = 
+pxNewLi¡I‹m
+;
+
+124 
+pxIndex
+->
+pxP»vious
+ = 
+pxNewLi¡I‹m
+;
+
+127 
+pxNewLi¡I‹m
+->
+pvCÚš”
+ = ( * ) 
+pxLi¡
+;
+
+129 Ğ
+pxLi¡
+->
+uxNumb”OfI‹ms
+ )++;
+
+130 
+	}
+}
+
+132 
+UBa£Ty³_t
+ 
+	$uxLi¡Remove
+Ğ
+Li¡I‹m_t
+ * cÚ¡ 
+pxI‹mToRemove
+ )
+
+136 
+Li¡_t
+ * cÚ¡ 
+pxLi¡
+ = ( Li¡_ˆ* ) 
+pxI‹mToRemove
+->
+pvCÚš”
+;
+
+138 
+pxI‹mToRemove
+->
+pxNext
+->
+pxP»vious
+ =…xItemToRemove->pxPrevious;
+
+139 
+pxI‹mToRemove
+->
+pxP»vious
+->
+pxNext
+ =…xItemToRemove->pxNext;
+
+142 
+	`mtCOVERAGE_TEST_DELAY
+();
+
+145 ifĞ
+pxLi¡
+->
+pxIndex
+ =ğ
+pxI‹mToRemove
+ )
+
+147 
+pxLi¡
+->
+pxIndex
+ = 
+pxI‹mToRemove
+->
+pxP»vious
+;
+
+151 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+154 
+pxI‹mToRemove
+->
+pvCÚš”
+ = 
+NULL
+;
+
+155 Ğ
+pxLi¡
+->
+uxNumb”OfI‹ms
+ )--;
+
+157  
+pxLi¡
+->
+uxNumb”OfI‹ms
+;
+
+158 
+	}
+}
+
+	@list2.h
+
+1 
+	sxLIST_ITEM
+
+
+4 
+cÚfigLIST_VOLATILE
+ 
+TickTy³_t
+ 
+	mxI‹mV®ue
+;
+
+5 
+xLIST_ITEM
+ * 
+cÚfigLIST_VOLATILE
+ 
+	mpxNext
+;
+
+6 
+xLIST_ITEM
+ * 
+cÚfigLIST_VOLATILE
+ 
+	mpxP»vious
+;
+
+7 * 
+	mpvOwÃr
+;
+
+8 * 
+cÚfigLIST_VOLATILE
+ 
+	mpvCÚš”
+;
+
+9 
+	mli¡SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE
+
+
+11 
+xLIST_ITEM
+ 
+	tLi¡I‹m_t
+;
+
+13 
+	sxMINI_LIST_ITEM
+
+
+16 
+cÚfigLIST_VOLATILE
+ 
+TickTy³_t
+ 
+	mxI‹mV®ue
+;
+
+17 
+xLIST_ITEM
+ * 
+cÚfigLIST_VOLATILE
+ 
+	mpxNext
+;
+
+18 
+xLIST_ITEM
+ * 
+cÚfigLIST_VOLATILE
+ 
+	mpxP»vious
+;
+
+20 
+xMINI_LIST_ITEM
+ 
+	tMšiLi¡I‹m_t
+;
+
+25 
+	sxLIST
+
+
+28 
+cÚfigLIST_VOLATILE
+ 
+UBa£Ty³_t
+ 
+	muxNumb”OfI‹ms
+;
+
+29 
+Li¡I‹m_t
+ * 
+cÚfigLIST_VOLATILE
+ 
+	mpxIndex
+;
+
+30 
+MšiLi¡I‹m_t
+ 
+	mxLi¡End
+;
+
+31 
+	mli¡SECOND_LIST_INTEGRITY_CHECK_VALUE
+
+
+32 } 
+	tLi¡_t
+;
+
+34 
+	#li¡LIST_IS_EMPTY
+Ğ
+pxLi¡
+ ) ( ( 
+Ba£Ty³_t
+ ) ( (…xLi¡ )->
+uxNumb”OfI‹ms
+ =ğĞ
+UBa£Ty³_t
+ ) 0 ) )
+
+	)
+
+	@main.c
+
+1 
+	~"h—p2.h
+"
+
+2 
+	~"queue2.h
+"
+
+3 
+	$vSysÿÎIn™
+()
+
+5 
+a
+ =1,
+b
+ = 2;
+
+6 *
+±r
+;
+
+7 
+a
+ +=
+b
+;
+
+8 
+±r
+ = (*)
+	`pvPÜtM®loc
+(50);
+
+9 
+xTe¡Queue
+ = 
+	`xQueueC»©e
+Ğ
+bktQUEUE_LENGTH
+, Ğ
+Ba£Ty³_t
+ ) );
+
+11 ifĞ
+	`xQueueReûive
+Ğ
+xTe¡Queue
+, &
+xD©a
+, 
+xTimeToBlock
+ ) !ğ
+”rQUEUE_EMPTY
+ )
+
+13 
+xE¼ÜOccu¼ed
+ = 
+pdTRUE
+;
+
+18 
+	}
+}
+
+21 
+	$vTaskS¹ScheduËr
+( )
+
+23 
+Ba£Ty³_t
+ 
+xR‘uº
+;
+
+26 #iàĞ
+INCLUDE_xTaskG‘IdËTaskHªdË
+ == 1 )
+
+30 
+xR‘uº
+ = 
+	`xTaskC»©e
+Ğ
+´vIdËTask
+, "IDLE", 
+tskIDLE_STACK_SIZE
+, ( * ) 
+NULL
+, ( 
+tskIDLE_PRIORITY
+ | 
+pÜtPRIVILEGE_BIT
+ ), &
+xIdËTaskHªdË
+ );
+
+35 
+xR‘uº
+ = 
+	`xTaskC»©e
+Ğ
+´vIdËTask
+, "IDLE", 
+tskIDLE_STACK_SIZE
+, ( * ) 
+NULL
+, ( 
+tskIDLE_PRIORITY
+ | 
+pÜtPRIVILEGE_BIT
+ ), NULL );
+
+39 #iàĞ
+cÚfigUSE_TIMERS
+ == 1 )
+
+41 ifĞ
+xR‘uº
+ =ğ
+pdPASS
+ )
+
+43 
+xR‘uº
+ = 
+	`xTim”C»©eTim”Task
+();
+
+47 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+52 ifĞ
+xR‘uº
+ =ğ
+pdPASS
+ )
+
+59 
+	`pÜtDISABLE_INTERRUPTS
+();
+
+61 #iàĞ
+cÚfigUSE_NEWLIB_REENTRANT
+ == 1 )
+
+65 
+_impu»_±r
+ = &Ğ
+pxCu¼’tTCB
+->
+xNewLib_»’t
+ );
+
+69 
+xNextTaskUnblockTime
+ = 
+pÜtMAX_DELAY
+;
+
+70 
+xScheduËrRuÂšg
+ = 
+pdTRUE
+;
+
+71 
+xTickCouÁ
+ = ( 
+TickTy³_t
+ ) 0U;
+
+76 
+	`pÜtCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+();
+
+80 ifĞ
+	`xPÜtS¹ScheduËr
+(è!ğ
+pdFALSE
+ )
+
+95 
+	`cÚfigASSERT
+Ğ
+xR‘uº
+ );
+
+97 
+	}
+}
+
+	@port.c
+
+1 
+	$´vS‘NextTim”IÁ”ru±
+()
+
+3 
+__asm
+ volatile("csrr0,mtimecmp");
+
+4 
+__asm
+ vŞ©e("add0,t0,%0" :: "r"(
+cÚfigTICK_CLOCK_HZ
+ / 
+cÚfigTICK_RATE_HZ
+));
+
+5 
+__asm
+ volatile("csrw mtimecmp,t0");
+
+6 
+	}
+}
+
+	@queue2.c
+
+1 
+	gšşude
+ "queue2.h"
+
+2 
+Ba£Ty³_t
+ 
+	$xQueueG’”icRe£t
+Ğ
+QueueHªdË_t
+ 
+xQueue
+, 
+Ba£Ty³_t
+ 
+xNewQueue
+ )
+
+4 
+Queue_t
+ * cÚ¡ 
+pxQueue
+ = ( Queue_ˆ* ) 
+xQueue
+;
+
+9 
+pxQueue
+->
+pcTa
+ =…xQueue->
+pcH—d
+ + (…xQueue->
+uxL’gth
+ *…xQueue->
+uxI‹mSize
+ );
+
+10 
+pxQueue
+->
+uxMes§gesWa™šg
+ = ( 
+UBa£Ty³_t
+ ) 0U;
+
+11 
+pxQueue
+->
+pcWr™eTo
+ =…xQueue->
+pcH—d
+;
+
+12 
+pxQueue
+->
+u
+.
+pcR—dFrom
+ =…xQueue->
+pcH—d
+ + ( (…xQueue->
+uxL’gth
+ - ( 
+UBa£Ty³_t
+ ) 1U ) *…xQueue->
+uxI‹mSize
+ );
+
+13 
+pxQueue
+->
+xRxLock
+ = 
+queueUNLOCKED
+;
+
+14 
+pxQueue
+->
+xTxLock
+ = 
+queueUNLOCKED
+;
+
+16 ifĞ
+xNewQueue
+ =ğ
+çl£
+ )
+
+23 ifĞ
+	`li¡LIST_IS_EMPTY
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToS’d
+ ) ) =ğ
+pdFALSE
+ )
+
+25 ifĞ
+	`xTaskRemoveFromEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToS’d
+ ) ) =ğ
+pdTRUE
+ )
+
+27 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+31 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+36 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+42 
+	`vLi¡In™Ÿli£
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToS’d
+ ) );
+
+43 
+	`vLi¡In™Ÿli£
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) );
+
+50  
+pdPASS
+;
+
+51 
+	}
+}
+
+61 
+QueueHªdË_t
+ 
+	$xQueueG’”icC»©e
+ĞcÚ¡ 
+UBa£Ty³_t
+ 
+uxQueueL’gth
+, cÚ¡ UBa£Ty³_ˆ
+uxI‹mSize
+, cÚ¡ 
+ušt8_t
+ 
+ucQueueTy³
+ )
+
+63 
+Queue_t
+ *
+pxNewQueue
+;
+
+64 
+size_t
+ 
+xQueueSizeInBy‹s
+;
+
+65 
+QueueHªdË_t
+ 
+xR‘uº
+ = 
+NULL
+;
+
+69 Ğè
+ucQueueTy³
+;
+
+73 ifĞ
+uxI‹mSize
+ =ğĞ
+UBa£Ty³_t
+ ) 0 )
+
+76 
+xQueueSizeInBy‹s
+ = ( 
+size_t
+ ) 0;
+
+82 
+xQueueSizeInBy‹s
+ = ( 
+size_t
+ ) ( 
+uxQueueL’gth
+ * 
+uxI‹mSize
+ ) + ( size_t ) 1;
+
+85 
+pxNewQueue
+ = ( 
+Queue_t
+ * ) 
+	`pvPÜtM®loc
+ĞĞQueue_ˆè+ 
+xQueueSizeInBy‹s
+ );
+
+88 ifĞ
+pxNewQueue
+ !ğ
+NULL
+ )
+
+90 ifĞ
+uxI‹mSize
+ =ğĞ
+UBa£Ty³_t
+ ) 0 )
+
+96 
+pxNewQueue
+->
+pcH—d
+ = ( 
+št8_t
+ * )…xNewQueue;
+
+102 
+pxNewQueue
+->
+pcH—d
+ = ( ( 
+št8_t
+ * )…xNewQueuè+ Ğ
+Queue_t
+ );
+
+107 
+pxNewQueue
+->
+uxL’gth
+ = 
+uxQueueL’gth
+;
+
+108 
+pxNewQueue
+->
+uxI‹mSize
+ = uxItemSize;
+
+109 Ğè
+	`xQueueG’”icRe£t
+Ğ
+pxNewQueue
+, 
+Œue
+);
+
+111 #iàĞ
+cÚfigUSE_TRACE_FACILITY
+ == 1 )
+
+113 
+pxNewQueue
+->
+ucQueueTy³
+ = ucQueueType;
+
+117 #ifĞ
+cÚfigUSE_QUEUE_SETS
+ == 1 )
+
+119 
+pxNewQueue
+->
+pxQueueS‘CÚš”
+ = 
+NULL
+;
+
+124 
+xR‘uº
+ = 
+pxNewQueue
+;
+
+127  
+xR‘uº
+;
+
+128 
+	}
+}
+
+129 
+	$vQueueAddToRegi¡ry
+Ğ
+QueueHªdË_t
+ 
+xQueue
+, cÚ¡ *
+pcQueueName
+ )
+
+131 
+UBa£Ty³_t
+ 
+ux
+;
+
+135  
+ux
+ = ( 
+UBa£Ty³_t
+ ) 0U; ux < ( UBa£Ty³_ˆè
+cÚfigQUEUE_REGISTRY_SIZE
+; ux++ )
+
+137 ifĞ
+xQueueRegi¡ry
+[ 
+ux
+ ].
+pcQueueName
+ =ğ
+NULL
+ )
+
+140 
+xQueueRegi¡ry
+[ 
+ux
+ ].
+pcQueueName
+ =…cQueueName;
+
+141 
+xQueueRegi¡ry
+[ 
+ux
+ ].
+xHªdË
+ = 
+xQueue
+;
+
+143 
+	`ŒaûQUEUE_REGISTRY_ADD
+Ğ
+xQueue
+, 
+pcQueueName
+ );
+
+148 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+151 
+	}
+}
+
+153 
+Ba£Ty³_t
+ 
+	$´vCİyD©aToQueue
+Ğ
+Queue_t
+ * cÚ¡ 
+pxQueue
+, cÚ¡ *
+pvI‹mToQueue
+, cÚ¡ 
+Ba£Ty³_t
+ 
+xPos™iÚ
+ )
+
+155 
+Ba£Ty³_t
+ 
+xR‘uº
+ = 
+pdFALSE
+;
+
+157 ifĞ
+pxQueue
+->
+uxI‹mSize
+ =ğĞ
+UBa£Ty³_t
+ ) 0 )
+
+159 #iàĞ
+cÚfigUSE_MUTEXES
+ == 1 )
+
+161 ifĞ
+pxQueue
+->
+uxQueueTy³
+ =ğ
+queueQUEUE_IS_MUTEX
+ )
+
+164 
+xR‘uº
+ = 
+	`xTaskPriÜ™yDisšh”™
+ĞĞ* ) 
+pxQueue
+->
+pxMu‹xHŞd”
+ );
+
+165 
+pxQueue
+->
+pxMu‹xHŞd”
+ = 
+NULL
+;
+
+169 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+174 ifĞ
+xPos™iÚ
+ =ğ
+queueSEND_TO_BACK
+ )
+
+176 Ğè
+	`memıy
+ĞĞ* ) 
+pxQueue
+->
+pcWr™eTo
+, 
+pvI‹mToQueue
+, ( 
+size_t
+ )…xQueue->
+uxI‹mSize
+ );
+
+177 
+pxQueue
+->
+pcWr™eTo
+ +ğpxQueue->
+uxI‹mSize
+;
+
+178 ifĞ
+pxQueue
+->
+pcWr™eTo
+ >ğpxQueue->
+pcTa
+ )
+
+180 
+pxQueue
+->
+pcWr™eTo
+ =…xQueue->
+pcH—d
+;
+
+184 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+189 Ğè
+	`memıy
+ĞĞ* ) 
+pxQueue
+->
+u
+.
+pcR—dFrom
+, 
+pvI‹mToQueue
+, ( 
+size_t
+ )…xQueue->
+uxI‹mSize
+ );
+
+190 
+pxQueue
+->
+u
+.
+pcR—dFrom
+ -ğpxQueue->
+uxI‹mSize
+;
+
+191 ifĞ
+pxQueue
+->
+u
+.
+pcR—dFrom
+ <…xQueue->
+pcH—d
+ )
+
+193 
+pxQueue
+->
+u
+.
+pcR—dFrom
+ = (…xQueue->
+pcTa
+ -…xQueue->
+uxI‹mSize
+ );
+
+197 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+200 ifĞ
+xPos™iÚ
+ =ğ
+queueOVERWRITE
+ )
+
+202 ifĞ
+pxQueue
+->
+uxMes§gesWa™šg
+ > ( 
+UBa£Ty³_t
+ ) 0 )
+
+208 --Ğ
+pxQueue
+->
+uxMes§gesWa™šg
+ );
+
+212 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+217 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+221 ++Ğ
+pxQueue
+->
+uxMes§gesWa™šg
+ );
+
+223  
+xR‘uº
+;
+
+224 
+	}
+}
+
+237 
+Ba£Ty³_t
+ 
+	$xQueueG’”icS’d
+Ğ
+QueueHªdË_t
+ 
+xQueue
+, cÚ¡ * cÚ¡ 
+pvI‹mToQueue
+, 
+TickTy³_t
+ 
+xTicksToWa™
+, cÚ¡ 
+Ba£Ty³_t
+ 
+xCİyPos™iÚ
+ )
+
+239 
+Ba£Ty³_t
+ 
+xEÁryTimeS‘
+ = 
+çl£
+, 
+xY›ldRequœed
+;
+
+240 
+TimeOut_t
+ 
+xTimeOut
+;
+
+241 
+Queue_t
+ * cÚ¡ 
+pxQueue
+ = ( Queue_ˆ* ) 
+xQueue
+;
+
+264 ifĞĞ
+pxQueue
+->
+uxMes§gesWa™šg
+ <…xQueue->
+uxL’gth
+ ) || ( 
+xCİyPos™iÚ
+ =ğ
+queueOVERWRITE
+ ) )
+
+267 
+xY›ldRequœed
+ = 
+	`´vCİyD©aToQueue
+Ğ
+pxQueue
+, 
+pvI‹mToQueue
+, 
+xCİyPos™iÚ
+ );
+
+269 #iàĞ
+cÚfigUSE_QUEUE_SETS
+ == 1 )
+
+271 ifĞ
+pxQueue
+->
+pxQueueS‘CÚš”
+ !ğ
+NULL
+ )
+
+273 ifĞ
+	`´vNÙifyQueueS‘CÚš”
+Ğ
+pxQueue
+, 
+xCİyPos™iÚ
+ ) =ğ
+pdTRUE
+ )
+
+278 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+282 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+289 ifĞ
+	`li¡LIST_IS_EMPTY
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) ) =ğ
+pdFALSE
+ )
+
+291 ifĞ
+	`xTaskRemoveFromEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) ) =ğ
+pdTRUE
+ )
+
+297 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+301 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+304 ifĞ
+xY›ldRequœed
+ !ğ
+pdFALSE
+ )
+
+310 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+314 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+322 ifĞ
+	`li¡LIST_IS_EMPTY
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) ) =ğ
+pdFALSE
+ )
+
+324 ifĞ
+	`xTaskRemoveFromEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) ) =ğ
+pdTRUE
+ )
+
+330 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+334 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+337 ifĞ
+xY›ldRequœed
+ !ğ
+pdFALSE
+ )
+
+343 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+347 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+352 
+	`skEXIT_CRITICAL
+();
+
+353  
+pdPASS
+;
+
+357 ifĞ
+xTicksToWa™
+ =ğĞ
+TickTy³_t
+ ) 0 )
+
+361 
+	`skEXIT_CRITICAL
+();
+
+365 
+	`ŒaûQUEUE_SEND_FAILED
+Ğ
+pxQueue
+ );
+
+366  
+”rQUEUE_FULL
+;
+
+368 ifĞ
+xEÁryTimeS‘
+ =ğ
+pdFALSE
+ )
+
+372 
+	`vTaskS‘TimeOutS‹
+Ğ&
+xTimeOut
+ );
+
+373 
+xEÁryTimeS‘
+ = 
+pdTRUE
+;
+
+378 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+382 
+	`skEXIT_CRITICAL
+();
+
+387 
+	`vTaskSu¥’dAÎ
+();
+
+388 
+	`´vLockQueue
+Ğ
+pxQueue
+ );
+
+391 ifĞ
+	`xTaskCheckFÜTimeOut
+Ğ&
+xTimeOut
+, &
+xTicksToWa™
+ ) =ğ
+pdFALSE
+ )
+
+393 ifĞ
+	`´vIsQueueFuÎ
+Ğ
+pxQueue
+ ) !ğ
+pdFALSE
+ )
+
+395 
+	`ŒaûBLOCKING_ON_QUEUE_SEND
+Ğ
+pxQueue
+ );
+
+396 
+	`vTaskPÏûOnEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToS’d
+ ), 
+xTicksToWa™
+ );
+
+403 
+	`´vUÆockQueue
+Ğ
+pxQueue
+ );
+
+410 ifĞ
+	`xTaskResumeAÎ
+(è=ğ
+pdFALSE
+ )
+
+412 
+	`pÜtYIELD_WITHIN_API
+();
+
+418 
+	`´vUÆockQueue
+Ğ
+pxQueue
+ );
+
+419 Ğè
+	`xTaskResumeAÎ
+();
+
+425 
+	`´vUÆockQueue
+Ğ
+pxQueue
+ );
+
+426 Ğè
+	`xTaskResumeAÎ
+();
+
+430 
+	`ŒaûQUEUE_SEND_FAILED
+Ğ
+pxQueue
+ );
+
+431  
+”rQUEUE_FULL
+;
+
+434 
+	}
+}
+
+439 
+	$´vCİyD©aFromQueue
+Ğ
+Queue_t
+ * cÚ¡ 
+pxQueue
+, * cÚ¡ 
+pvBufãr
+ )
+
+441 ifĞ
+pxQueue
+->
+uxI‹mSize
+ !ğĞ
+UBa£Ty³_t
+ ) 0 )
+
+443 
+pxQueue
+->
+u
+.
+pcR—dFrom
+ +ğpxQueue->
+uxI‹mSize
+;
+
+444 ifĞ
+pxQueue
+->
+u
+.
+pcR—dFrom
+ >ğpxQueue->
+pcTa
+ )
+
+446 
+pxQueue
+->
+u
+.
+pcR—dFrom
+ =…xQueue->
+pcH—d
+;
+
+450 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+452 Ğè
+	`memıy
+ĞĞ* ) 
+pvBufãr
+, ( * ) 
+pxQueue
+->
+u
+.
+pcR—dFrom
+, ( 
+size_t
+ )…xQueue->
+uxI‹mSize
+ );
+
+454 
+	}
+}
+
+464 
+Ba£Ty³_t
+ 
+	$xQueueG’”icReûive
+Ğ
+QueueHªdË_t
+ 
+xQueue
+, * cÚ¡ 
+pvBufãr
+, 
+TickTy³_t
+ 
+xTicksToWa™
+, cÚ¡ 
+Ba£Ty³_t
+ 
+xJu¡P“kšg
+ )
+
+466 
+Ba£Ty³_t
+ 
+xEÁryTimeS‘
+ = 
+pdFALSE
+;
+
+467 
+TimeOut_t
+ 
+xTimeOut
+;
+
+468 
+št8_t
+ *
+pcOrigš®R—dPos™iÚ
+;
+
+469 
+Queue_t
+ * cÚ¡ 
+pxQueue
+ = ( Queue_ˆ* ) 
+xQueue
+;
+
+471 
+	`cÚfigASSERT
+Ğ
+pxQueue
+ );
+
+472 
+	`cÚfigASSERT
+Ğ!ĞĞ
+pvBufãr
+ =ğ
+NULL
+ ) && ( 
+pxQueue
+->
+uxI‹mSize
+ !ğĞ
+UBa£Ty³_t
+ ) 0U ) ) );
+
+473 #iàĞĞ
+INCLUDE_xTaskG‘ScheduËrS‹
+ =ğ1 ) || ( 
+cÚfigUSE_TIMERS
+ == 1 ) )
+
+475 
+	`cÚfigASSERT
+Ğ!ĞĞ
+	`xTaskG‘ScheduËrS‹
+(è=ğ
+skSCHEDULER_SUSPENDED
+ ) && ( 
+xTicksToWa™
+ != 0 ) ) );
+
+485 
+	`skENTER_CRITICAL
+();
+
+489 ifĞ
+pxQueue
+->
+uxMes§gesWa™šg
+ > ( 
+UBa£Ty³_t
+ ) 0 )
+
+493 
+pcOrigš®R—dPos™iÚ
+ = 
+pxQueue
+->
+u
+.
+pcR—dFrom
+;
+
+495 
+	`´vCİyD©aFromQueue
+Ğ
+pxQueue
+, 
+pvBufãr
+ );
+
+497 ifĞ
+xJu¡P“kšg
+ =ğ
+pdFALSE
+ )
+
+499 
+	`ŒaûQUEUE_RECEIVE
+Ğ
+pxQueue
+ );
+
+502 --Ğ
+pxQueue
+->
+uxMes§gesWa™šg
+ );
+
+504 #iàĞ
+cÚfigUSE_MUTEXES
+ == 1 )
+
+506 ifĞ
+pxQueue
+->
+uxQueueTy³
+ =ğ
+queueQUEUE_IS_MUTEX
+ )
+
+510 
+pxQueue
+->
+pxMu‹xHŞd”
+ = ( 
+št8_t
+ * ) 
+	`pvTaskInüem’tMu‹xH–dCouÁ
+();
+
+514 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+519 ifĞ
+	`li¡LIST_IS_EMPTY
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToS’d
+ ) ) =ğ
+pdFALSE
+ )
+
+521 ifĞ
+	`xTaskRemoveFromEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToS’d
+ ) ) =ğ
+pdTRUE
+ )
+
+523 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+527 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+532 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+537 
+	`ŒaûQUEUE_PEEK
+Ğ
+pxQueue
+ );
+
+541 
+pxQueue
+->
+u
+.
+pcR—dFrom
+ = 
+pcOrigš®R—dPos™iÚ
+;
+
+545 ifĞ
+	`li¡LIST_IS_EMPTY
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) ) =ğ
+pdFALSE
+ )
+
+547 ifĞ
+	`xTaskRemoveFromEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ) ) !ğ
+pdFALSE
+ )
+
+550 
+	`queueYIELD_IF_USING_PREEMPTION
+();
+
+554 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+559 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+563 
+	`skEXIT_CRITICAL
+();
+
+564  
+pdPASS
+;
+
+568 ifĞ
+xTicksToWa™
+ =ğĞ
+TickTy³_t
+ ) 0 )
+
+572 
+	`skEXIT_CRITICAL
+();
+
+573 
+	`ŒaûQUEUE_RECEIVE_FAILED
+Ğ
+pxQueue
+ );
+
+574  
+”rQUEUE_EMPTY
+;
+
+576 ifĞ
+xEÁryTimeS‘
+ =ğ
+pdFALSE
+ )
+
+580 
+	`vTaskS‘TimeOutS‹
+Ğ&
+xTimeOut
+ );
+
+581 
+xEÁryTimeS‘
+ = 
+pdTRUE
+;
+
+586 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+590 
+	`skEXIT_CRITICAL
+();
+
+595 
+	`vTaskSu¥’dAÎ
+();
+
+596 
+	`´vLockQueue
+Ğ
+pxQueue
+ );
+
+599 ifĞ
+	`xTaskCheckFÜTimeOut
+Ğ&
+xTimeOut
+, &
+xTicksToWa™
+ ) =ğ
+pdFALSE
+ )
+
+601 ifĞ
+	`´vIsQueueEm±y
+Ğ
+pxQueue
+ ) !ğ
+pdFALSE
+ )
+
+603 
+	`ŒaûBLOCKING_ON_QUEUE_RECEIVE
+Ğ
+pxQueue
+ );
+
+605 #iàĞ
+cÚfigUSE_MUTEXES
+ == 1 )
+
+607 ifĞ
+pxQueue
+->
+uxQueueTy³
+ =ğ
+queueQUEUE_IS_MUTEX
+ )
+
+609 
+	`skENTER_CRITICAL
+();
+
+611 
+	`vTaskPriÜ™yInh”™
+ĞĞ* ) 
+pxQueue
+->
+pxMu‹xHŞd”
+ );
+
+613 
+	`skEXIT_CRITICAL
+();
+
+617 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+622 
+	`vTaskPÏûOnEv’tLi¡
+Ğ&Ğ
+pxQueue
+->
+xTasksWa™šgToReûive
+ ), 
+xTicksToWa™
+ );
+
+623 
+	`´vUÆockQueue
+Ğ
+pxQueue
+ );
+
+624 ifĞ
+	`xTaskResumeAÎ
+(è=ğ
+pdFALSE
+ )
+
+626 
+	`pÜtYIELD_WITHIN_API
+();
+
+630 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+636 
+	`´vUÆockQueue
+Ğ
+pxQueue
+ );
+
+637 Ğè
+	`xTaskResumeAÎ
+();
+
+642 
+	`´vUÆockQueue
+Ğ
+pxQueue
+ );
+
+643 Ğè
+	`xTaskResumeAÎ
+();
+
+644 
+	`ŒaûQUEUE_RECEIVE_FAILED
+Ğ
+pxQueue
+ );
+
+645  
+”rQUEUE_EMPTY
+;
+
+648 
+	}
+}
+
+	@queue2.h
+
+3 
+QueueHªdË_t
+ 
+	gxTe¡Queue
+;
+
+6 
+	#queueYIELD_IF_USING_PREEMPTION
+(è
+	`pÜtYIELD_WITHIN_API
+()
+
+	)
+
+8 
+	#pÜtYIELD_WITHIN_API
+ 
+pÜtYIELD
+
+
+	)
+
+9 
+	#pÜtYIELD
+(è
+	`vPÜtY›ld
+()
+
+	)
+
+12 
+	#skENTER_CRITICAL
+(è
+	`pÜtENTER_CRITICAL
+()
+
+	)
+
+13 
+	#skEXIT_CRITICAL
+(è
+	`pÜtEXIT_CRITICAL
+()
+
+	)
+
+15 
+	#pÜtENTER_CRITICAL
+(è
+	`vTaskEÁ”Cr™iÿl
+()
+
+	)
+
+18 
+	#pÜtEXIT_CRITICAL
+(è
+	`vTaskEx™Cr™iÿl
+()
+
+	)
+
+21 
+	$vTaskEÁ”Cr™iÿl
+( )
+
+23 
+	`pÜtDISABLE_INTERRUPTS
+();
+
+25 ifĞ
+xScheduËrRuÂšg
+ !ğ
+pdFALSE
+ )
+
+27 Ğ
+pxCu¼’tTCB
+->
+uxCr™iÿlNe¡šg
+ )++;
+
+35 ifĞ
+pxCu¼’tTCB
+->
+uxCr™iÿlNe¡šg
+ == 1 )
+
+37 
+	`pÜtASSERT_IF_IN_ISR
+();
+
+42 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+44 
+	}
+}
+
+45 
+	$vTaskEx™Cr™iÿl
+( )
+
+47 ifĞ
+xScheduËrRuÂšg
+ !ğ
+pdFALSE
+ )
+
+49 ifĞ
+pxCu¼’tTCB
+->
+uxCr™iÿlNe¡šg
+ > 0U )
+
+51 Ğ
+pxCu¼’tTCB
+->
+uxCr™iÿlNe¡šg
+ )--;
+
+53 ifĞ
+pxCu¼’tTCB
+->
+uxCr™iÿlNe¡šg
+ == 0U )
+
+55 
+	`pÜtENABLE_INTERRUPTS
+();
+
+59 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+64 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+69 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+71 
+	}
+}
+
+75 
+	#queueQUEUE_TYPE_BASE
+ ( ( 
+ušt8_t
+ ) 0U )
+
+	)
+
+77 
+	#xQueueReûive
+Ğ
+xQueue
+, 
+pvBufãr
+, 
+xTicksToWa™
+ ) 
+	`xQueueG’”icReûive
+ĞĞxQueu), (…vBufã¸), ( xTicksToWa™ ), 
+pdFALSE
+ )
+
+	)
+
+79 
+	#xQueueC»©e
+Ğ
+uxQueueL’gth
+, 
+uxI‹mSize
+ ) 
+	`xQueueG’”icC»©e
+ĞuxQueueL’gth, uxI‹mSize, 
+queueQUEUE_TYPE_BASE
+ )
+
+	)
+
+81 * 
+	tQueueHªdË_t
+;
+
+83 
+	tBa£Ty³_t
+;
+
+85 
+	tUBa£Ty³_t
+;
+
+87 
+	#cÚfigUSE_QUEUE_SETS
+ 0
+
+	)
+
+90 
+	#queueQUEUE_TYPE_BASE
+ ( ( 
+ušt8_t
+ ) 0U )
+
+	)
+
+92 
+	#queueSEND_TO_BACK
+ ( ( 
+Ba£Ty³_t
+ ) 0 )
+
+	)
+
+93 
+	#queueSEND_TO_FRONT
+ ( ( 
+Ba£Ty³_t
+ ) 1 )
+
+	)
+
+94 
+	#queueOVERWRITE
+ ( ( 
+Ba£Ty³_t
+ ) 2 )
+
+	)
+
+96 
+	#xQueueC»©e
+Ğ
+uxQueueL’gth
+, 
+uxI‹mSize
+ ) 
+	`xQueueG’”icC»©e
+ĞuxQueueL’gth, uxI‹mSize, 
+queueQUEUE_TYPE_BASE
+ )
+
+	)
+
+98 
+	#xQueueS’d
+Ğ
+xQueue
+, 
+pvI‹mToQueue
+, 
+xTicksToWa™
+ ) 
+	`xQueueG’”icS’d
+ĞĞxQueu), (…vI‹mToQueu), ( xTicksToWa™ ), 
+queueSEND_TO_BACK
+ )
+
+	)
+
+101 
+	#bktQUEUE_LENGTH
+ ( 5 )
+
+	)
+
+103 
+	#cÚfigQUEUE_REGISTRY_SIZE
+ 8
+
+	)
+
+104 
+QueueRegi¡ryI‹m_t
+ 
+	gxQueueRegi¡ry
+[ 
+cÚfigQUEUE_REGISTRY_SIZE
+ ];
+
+105 
+xQueueRegi¡ryI‹m
+ 
+	tQueueRegi¡ryI‹m_t
+;
+
+107 
+	sQUEUE_REGISTRY_ITEM
+
+
+109 cÚ¡ *
+	mpcQueueName
+;
+
+110 
+QueueHªdË_t
+ 
+	mxHªdË
+;
+
+111 } 
+	txQueueRegi¡ryI‹m
+;
+
+119 
+	sxLIST
+
+
+121 
+li¡FIRST_LIST_INTEGRITY_CHECK_VALUE
+
+
+122 
+cÚfigLIST_VOLATILE
+ 
+UBa£Ty³_t
+ 
+	muxNumb”OfI‹ms
+;
+
+123 
+Li¡I‹m_t
+ * 
+cÚfigLIST_VOLATILE
+ 
+	mpxIndex
+;
+
+124 
+MšiLi¡I‹m_t
+ 
+	mxLi¡End
+;
+
+125 
+	mli¡SECOND_LIST_INTEGRITY_CHECK_VALUE
+
+
+126 } 
+	tLi¡_t
+;
+
+129 
+	sQueueDefš™iÚ
+
+
+131 
+št8_t
+ *
+	mpcH—d
+;
+
+132 
+št8_t
+ *
+	mpcTa
+;
+
+133 
+št8_t
+ *
+	mpcWr™eTo
+;
+
+137 
+št8_t
+ *
+	mpcR—dFrom
+;
+
+138 
+UBa£Ty³_t
+ 
+	muxRecursiveC®lCouÁ
+;
+
+139 } 
+	mu
+;
+
+141 
+Li¡_t
+ 
+	mxTasksWa™šgToS’d
+;
+
+142 
+Li¡_t
+ 
+	mxTasksWa™šgToReûive
+;
+
+144 vŞ©
+UBa£Ty³_t
+ 
+	muxMes§gesWa™šg
+;
+
+145 
+UBa£Ty³_t
+ 
+	muxL’gth
+;
+
+146 
+UBa£Ty³_t
+ 
+	muxI‹mSize
+;
+
+148 vŞ©
+Ba£Ty³_t
+ 
+	mxRxLock
+;
+
+149 vŞ©
+Ba£Ty³_t
+ 
+	mxTxLock
+;
+
+151 #iàĞ
+cÚfigUSE_TRACE_FACILITY
+ == 1 )
+
+152 
+UBa£Ty³_t
+ 
+	muxQueueNumb”
+;
+
+153 
+ušt8_t
+ 
+	mucQueueTy³
+;
+
+156 #iàĞ
+cÚfigUSE_QUEUE_SETS
+ == 1 )
+
+157 
+QueueDefš™iÚ
+ *
+	mpxQueueS‘CÚš”
+;
+
+160 } 
+	txQUEUE
+;
+
+163 
+	tUBa£Ty³_t
+;
+
+164 
+	tBa£Ty³_t
+;
+
+165 
+xQUEUE
+ 
+	tQueue_t
+;
+
+166 * 
+	tQueueHªdË_t
+;
+
+	@task.c
+
+1 
+TCB_t
+ *
+	$´vAÎoÿ‹TCBAndSck
+ĞcÚ¡ 
+ušt16_t
+ 
+usSckD•th
+, 
+SckTy³_t
+ * cÚ¡ 
+puxSckBufãr
+ )
+
+3 
+TCB_t
+ *
+pxNewTCB
+;
+
+8 #ifĞ
+pÜtSTACK_GROWTH
+ > 0 )
+
+12 
+pxNewTCB
+ = ( 
+TCB_t
+ * ) 
+	`pvPÜtM®loc
+( ( TCB_t ) );
+
+14 ifĞ
+pxNewTCB
+ !ğ
+NULL
+ )
+
+19 
+pxNewTCB
+->
+pxSck
+ = ( 
+SckTy³_t
+ * ) 
+	`pvPÜtM®locAligÃd
+ĞĞĞĞ
+size_t
+ ) 
+usSckD•th
+ ) * ĞSckTy³_ˆè), 
+puxSckBufãr
+ );
+
+21 ifĞ
+pxNewTCB
+->
+pxSck
+ =ğ
+NULL
+ )
+
+24 
+	`vPÜtF»e
+Ğ
+pxNewTCB
+ );
+
+25 
+pxNewTCB
+ = 
+NULL
+;
+
+31 
+SckTy³_t
+ *
+pxSck
+;
+
+34 
+pxSck
+ = ( 
+SckTy³_t
+ * ) 
+	`pvPÜtM®locAligÃd
+ĞĞĞĞ
+size_t
+ ) 
+usSckD•th
+ ) * ĞSckTy³_ˆè), 
+puxSckBufãr
+ );
+
+36 ifĞ
+pxSck
+ !ğ
+NULL
+ )
+
+40 
+pxNewTCB
+ = ( 
+TCB_t
+ * ) 
+	`pvPÜtM®loc
+( ( TCB_t ) );
+
+42 ifĞ
+pxNewTCB
+ !ğ
+NULL
+ )
+
+45 
+pxNewTCB
+->
+pxSck
+ =…xStack;
+
+51 
+	`vPÜtF»e
+Ğ
+pxSck
+ );
+
+56 
+pxNewTCB
+ = 
+NULL
+;
+
+61 ifĞ
+pxNewTCB
+ !ğ
+NULL
+ )
+
+64 #ifĞĞ
+cÚfigCHECK_FOR_STACK_OVERFLOW
+ > 1 ) || ( 
+cÚfigUSE_TRACE_FACILITY
+ =ğ1 ) || ( 
+INCLUDE_uxTaskG‘SckHighW©”M¬k
+ == 1 ) )
+
+67 Ğè
+	`mem£t
+Ğ
+pxNewTCB
+->
+pxSck
+, ( è
+tskSTACK_FILL_BYTE
+, ( 
+size_t
+ ) 
+usSckD•th
+ * Ğ
+SckTy³_t
+ ) );
+
+72  
+pxNewTCB
+;
+
+73 
+	}
+}
+
+78 
+Ba£Ty³_t
+ 
+	$xTaskG’”icC»©e
+Ğ
+TaskFunùiÚ_t
+ 
+pxTaskCode
+, cÚ¡ * cÚ¡ 
+pcName
+, cÚ¡ 
+ušt16_t
+ 
+usSckD•th
+,
+
+79 * cÚ¡ 
+pvP¬am‘”s
+, 
+UBa£Ty³_t
+ 
+uxPriÜ™y
+, 
+TaskHªdË_t
+ * cÚ¡ 
+pxC»©edTask
+, 
+SckTy³_t
+ * cÚ¡ 
+puxSckBufãr
+, cÚ¡ 
+MemÜyRegiÚ_t
+ * cÚ¡ 
+xRegiÚs
+ )
+
+81 
+Ba£Ty³_t
+ 
+xR‘uº
+;
+
+82 
+TCB_t
+ * 
+pxNewTCB
+;
+
+83 
+SckTy³_t
+ *
+pxTİOfSck
+;
+
+85 
+	`cÚfigASSERT
+Ğ
+pxTaskCode
+ );
+
+86 
+	`cÚfigASSERT
+ĞĞĞ
+uxPriÜ™y
+ & ( 
+UBa£Ty³_t
+ ) ( ~
+pÜtPRIVILEGE_BIT
+ ) ) < ( UBa£Ty³_ˆè
+cÚfigMAX_PRIORITIES
+ ) );
+
+90 
+pxNewTCB
+ = 
+	`´vAÎoÿ‹TCBAndSck
+Ğ
+usSckD•th
+, 
+puxSckBufãr
+ );
+
+91 ifĞ
+pxNewTCB
+ !ğ
+NULL
+ )
+
+93 #ifĞ
+pÜtUSING_MPU_WRAPPERS
+ == 1 )
+
+95 
+Ba£Ty³_t
+ 
+xRunPriveged
+;
+
+96 ifĞĞ
+uxPriÜ™y
+ & 
+pÜtPRIVILEGE_BIT
+ ) != 0U )
+
+98 
+xRunPriveged
+ = 
+pdTRUE
+;
+
+102 
+xRunPriveged
+ = 
+pdFALSE
+;
+
+104 
+uxPriÜ™y
+ &ğ~
+pÜtPRIVILEGE_BIT
+;
+
+106 ifĞ
+puxSckBufãr
+ !ğ
+NULL
+ )
+
+111 
+pxNewTCB
+->
+xUsšgStiÿÎyAÎoÿ‹dSck
+ = 
+pdTRUE
+;
+
+117 
+pxNewTCB
+->
+xUsšgStiÿÎyAÎoÿ‹dSck
+ = 
+pdFALSE
+;
+
+125 #ifĞ
+pÜtSTACK_GROWTH
+ < 0 )
+
+127 
+pxTİOfSck
+ = 
+pxNewTCB
+->
+pxSck
+ + ( 
+usSckD•th
+ - ( 
+ušt16_t
+ ) 1 );
+
+128 
+pxTİOfSck
+ = ( 
+SckTy³_t
+ * ) ( ( ( 
+pÜtPOINTER_SIZE_TYPE
+ )…xTİOfSck ) & ( ~ĞĞpÜtPOINTER_SIZE_TYPE ) 
+pÜtBYTE_ALIGNMENT_MASK
+ ) ) );
+
+131 
+	`cÚfigASSERT
+ĞĞĞĞ
+pÜtPOINTER_SIZE_TYPE
+ ) 
+pxTİOfSck
+ & (…ÜtPOINTER_SIZE_TYPE ) 
+pÜtBYTE_ALIGNMENT_MASK
+ ) == 0UL ) );
+
+135 
+pxTİOfSck
+ = 
+pxNewTCB
+->
+pxSck
+;
+
+137 
+	`cÚfigASSERT
+ĞĞĞĞ
+pÜtPOINTER_SIZE_TYPE
+ ) 
+pxNewTCB
+->
+pxSck
+ & (…ÜtPOINTER_SIZE_TYPE ) 
+pÜtBYTE_ALIGNMENT_MASK
+ ) == 0UL ) );
+
+142 
+pxNewTCB
+->
+pxEndOfSck
+ =…xNewTCB->
+pxSck
+ + ( 
+usSckD•th
+ - 1 );
+
+147 
+	`´vIn™Ÿli£TCBV¬ŸbËs
+Ğ
+pxNewTCB
+, 
+pcName
+, 
+uxPriÜ™y
+, 
+xRegiÚs
+, 
+usSckD•th
+ );
+
+153 #ifĞ
+pÜtUSING_MPU_WRAPPERS
+ == 1 )
+
+155 
+pxNewTCB
+->
+pxTİOfSck
+ = 
+	`pxPÜtIn™Ÿli£Sck
+ĞpxTİOfSck, 
+pxTaskCode
+, 
+pvP¬am‘”s
+, 
+xRunPriveged
+ );
+
+159 
+pxNewTCB
+->
+pxTİOfSck
+ = 
+	`pxPÜtIn™Ÿli£Sck
+ĞpxTİOfSck, 
+pxTaskCode
+, 
+pvP¬am‘”s
+ );
+
+163 ifĞĞ* ) 
+pxC»©edTask
+ !ğ
+NULL
+ )
+
+168 *
+pxC»©edTask
+ = ( 
+TaskHªdË_t
+ ) 
+pxNewTCB
+;
+
+172 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+177 
+	`skENTER_CRITICAL
+();
+
+179 
+uxCu¼’tNumb”OfTasks
+++;
+
+180 ifĞ
+pxCu¼’tTCB
+ =ğ
+NULL
+ )
+
+184 
+pxCu¼’tTCB
+ = 
+pxNewTCB
+;
+
+186 ifĞ
+uxCu¼’tNumb”OfTasks
+ =ğĞ
+UBa£Ty³_t
+ ) 1 )
+
+191 
+	`´vIn™Ÿli£TaskLi¡s
+();
+
+195 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+203 ifĞ
+xScheduËrRuÂšg
+ =ğ
+pdFALSE
+ )
+
+205 ifĞ
+pxCu¼’tTCB
+->
+uxPriÜ™y
+ <= uxPriority )
+
+207 
+pxCu¼’tTCB
+ = 
+pxNewTCB
+;
+
+211 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+216 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+220 
+uxTaskNumb”
+++;
+
+222 #iàĞ
+cÚfigUSE_TRACE_FACILITY
+ == 1 )
+
+225 
+pxNewTCB
+->
+uxTCBNumb”
+ = 
+uxTaskNumb”
+;
+
+228 
+	`ŒaûTASK_CREATE
+Ğ
+pxNewTCB
+ );
+
+230 
+	`´vAddTaskToR—dyLi¡
+Ğ
+pxNewTCB
+ );
+
+232 
+xR‘uº
+ = 
+pdPASS
+;
+
+233 
+	`pÜtSETUP_TCB
+Ğ
+pxNewTCB
+ );
+
+235 
+	`skEXIT_CRITICAL
+();
+
+239 
+xR‘uº
+ = 
+”rCOULD_NOT_ALLOCATE_REQUIRED_MEMORY
+;
+
+240 
+	`ŒaûTASK_CREATE_FAILED
+();
+
+243 ifĞ
+xR‘uº
+ =ğ
+pdPASS
+ )
+
+245 ifĞ
+xScheduËrRuÂšg
+ !ğ
+pdFALSE
+ )
+
+249 ifĞ
+pxCu¼’tTCB
+->
+uxPriÜ™y
+ < uxPriority )
+
+251 
+	`skYIELD_IF_USING_PREEMPTION
+();
+
+255 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+260 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+264  
+xR‘uº
+;
+
+265 
+	}
+}
+
+269 
+	$vTaskSw™chCÚ‹xt
+( )
+
+271 ifĞ
+uxScheduËrSu¥’ded
+ !ğĞ
+UBa£Ty³_t
+ ) 
+pdFALSE
+ )
+
+275 
+xY›ldP’dšg
+ = 
+pdTRUE
+;
+
+279 
+xY›ldP’dšg
+ = 
+pdFALSE
+;
+
+280 
+	`ŒaûTASK_SWITCHED_OUT
+();
+
+282 #iàĞ
+cÚfigGENERATE_RUN_TIME_STATS
+ == 1 )
+
+284 #ifdeà
+pÜtALT_GET_RUN_TIME_COUNTER_VALUE
+
+
+285 
+	`pÜtALT_GET_RUN_TIME_COUNTER_VALUE
+Ğ
+ulTÙ®RunTime
+ );
+
+287 
+ulTÙ®RunTime
+ = 
+	`pÜtGET_RUN_TIME_COUNTER_VALUE
+();
+
+297 ifĞ
+ulTÙ®RunTime
+ > 
+ulTaskSw™chedInTime
+ )
+
+299 
+pxCu¼’tTCB
+->
+ulRunTimeCouÁ”
+ +ğĞ
+ulTÙ®RunTime
+ - 
+ulTaskSw™chedInTime
+ );
+
+303 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+305 
+ulTaskSw™chedInTime
+ = 
+ulTÙ®RunTime
+;
+
+310 
+	`skCHECK_FOR_STACK_OVERFLOW
+();
+
+314 
+	`skSELECT_HIGHEST_PRIORITY_TASK
+();
+
+315 
+	`ŒaûTASK_SWITCHED_IN
+();
+
+317 #iàĞ
+cÚfigUSE_NEWLIB_REENTRANT
+ == 1 )
+
+321 
+_impu»_±r
+ = &Ğ
+pxCu¼’tTCB
+->
+xNewLib_»’t
+ );
+
+325 
+	}
+}
+
+329 
+	$´vIn™Ÿli£TCBV¬ŸbËs
+Ğ
+TCB_t
+ * cÚ¡ 
+pxTCB
+, cÚ¡ * cÚ¡ 
+pcName
+, 
+UBa£Ty³_t
+ 
+uxPriÜ™y
+, cÚ¡ 
+MemÜyRegiÚ_t
+ * cÚ¡ 
+xRegiÚs
+, cÚ¡ 
+ušt16_t
+ 
+usSckD•th
+ )
+
+331 
+UBa£Ty³_t
+ 
+x
+;
+
+334  
+x
+ = ( 
+UBa£Ty³_t
+ ) 0; x < ( UBa£Ty³_ˆè
+cÚfigMAX_TASK_NAME_LEN
+; x++ )
+
+336 
+pxTCB
+->
+pcTaskName
+[ 
+x
+ ] = 
+pcName
+[ x ];
+
+341 ifĞ
+pcName
+[ 
+x
+ ] == 0x00 )
+
+347 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+353 
+pxTCB
+->
+pcTaskName
+[ 
+cÚfigMAX_TASK_NAME_LEN
+ - 1 ] = '\0';
+
+357 ifĞ
+uxPriÜ™y
+ >ğĞ
+UBa£Ty³_t
+ ) 
+cÚfigMAX_PRIORITIES
+ )
+
+359 
+uxPriÜ™y
+ = ( 
+UBa£Ty³_t
+ ) 
+cÚfigMAX_PRIORITIES
+ - ( UBaseType_t ) 1U;
+
+363 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+366 
+pxTCB
+->
+uxPriÜ™y
+ = uxPriority;
+
+367 #iàĞ
+cÚfigUSE_MUTEXES
+ == 1 )
+
+369 
+pxTCB
+->
+uxBa£PriÜ™y
+ = 
+uxPriÜ™y
+;
+
+370 
+pxTCB
+->
+uxMu‹xesH–d
+ = 0;
+
+374 
+	`vLi¡In™Ÿli£I‹m
+Ğ&Ğ
+pxTCB
+->
+xG’”icLi¡I‹m
+ ) );
+
+375 
+	`vLi¡In™Ÿli£I‹m
+Ğ&Ğ
+pxTCB
+->
+xEv’tLi¡I‹m
+ ) );
+
+379 
+	`li¡SET_LIST_ITEM_OWNER
+Ğ&Ğ
+pxTCB
+->
+xG’”icLi¡I‹m
+ ),…xTCB );
+
+382 
+	`li¡SET_LIST_ITEM_VALUE
+Ğ&Ğ
+pxTCB
+->
+xEv’tLi¡I‹m
+ ), ( 
+TickTy³_t
+ ) 
+cÚfigMAX_PRIORITIES
+ - ( TickTy³_ˆè
+uxPriÜ™y
+ );
+
+383 
+	`li¡SET_LIST_ITEM_OWNER
+Ğ&Ğ
+pxTCB
+->
+xEv’tLi¡I‹m
+ ),…xTCB );
+
+385 #iàĞ
+pÜtCRITICAL_NESTING_IN_TCB
+ == 1 )
+
+387 
+pxTCB
+->
+uxCr™iÿlNe¡šg
+ = ( 
+UBa£Ty³_t
+ ) 0U;
+
+391 #iàĞ
+cÚfigUSE_APPLICATION_TASK_TAG
+ == 1 )
+
+393 
+pxTCB
+->
+pxTaskTag
+ = 
+NULL
+;
+
+397 #iàĞ
+cÚfigGENERATE_RUN_TIME_STATS
+ == 1 )
+
+399 
+pxTCB
+->
+ulRunTimeCouÁ”
+ = 0UL;
+
+403 #iàĞ
+pÜtUSING_MPU_WRAPPERS
+ == 1 )
+
+405 
+	`vPÜtStÜeTaskMPUS‘tšgs
+Ğ&Ğ
+pxTCB
+->
+xMPUS‘tšgs
+ ), 
+xRegiÚs
+,…xTCB->
+pxSck
+, 
+usSckD•th
+ );
+
+409 Ğè
+xRegiÚs
+;
+
+410 Ğè
+usSckD•th
+;
+
+414 #ifĞ
+cÚfigNUM_THREAD_LOCAL_STORAGE_POINTERS
+ != 0 )
+
+416  
+x
+ = 0; x < ( 
+UBa£Ty³_t
+ ) 
+cÚfigNUM_THREAD_LOCAL_STORAGE_POINTERS
+; x++ )
+
+418 
+pxTCB
+->
+pvTh»adLoÿlStÜagePoš‹rs
+[ 
+x
+ ] = 
+NULL
+;
+
+423 #iàĞ
+cÚfigUSE_TASK_NOTIFICATIONS
+ == 1 )
+
+425 
+pxTCB
+->
+ulNÙif›dV®ue
+ = 0;
+
+426 
+pxTCB
+->
+eNÙifyS‹
+ = 
+eNÙWa™šgNÙifiÿtiÚ
+;
+
+430 #iàĞ
+cÚfigUSE_NEWLIB_REENTRANT
+ == 1 )
+
+433 
+	`_REENT_INIT_PTR
+ĞĞ&Ğ
+pxTCB
+->
+xNewLib_»’t
+ ) ) );
+
+436 
+	}
+}
+
+440 
+SckTy³_t
+ *
+	$pxPÜtIn™Ÿli£Sck
+Ğ
+SckTy³_t
+ *
+pxTİOfSck
+, 
+TaskFunùiÚ_t
+ 
+pxCode
+, *
+pvP¬am‘”s
+ )
+
+444 *
+
+ 
+	`asm
+("x3");
+
+445 
+pxTİOfSck
+--;
+
+446 *
+pxTİOfSck
+ = (
+pÜtSTACK_TYPE
+)
+pxCode
+;
+
+447 
+pxTİOfSck
+ -= 22;
+
+448 *
+pxTİOfSck
+ = (
+pÜtSTACK_TYPE
+)
+pvP¬am‘”s
+;
+
+449 
+pxTİOfSck
+ -= 6;
+
+450 *
+pxTİOfSck
+ = (
+pÜtSTACK_TYPE
+)
+
+;
+
+451 
+pxTİOfSck
+ -= 3;
+
+452 *
+pxTİOfSck
+ = (
+pÜtSTACK_TYPE
+)
+´vTaskEx™E¼Ü
+;
+
+454  
+pxTİOfSck
+;
+
+455 
+	}
+}
+
+	@task.h
+
+1 
+	#xTaskC»©e
+Ğ
+pvTaskCode
+, 
+pcName
+, 
+usSckD•th
+, 
+pvP¬am‘”s
+, 
+uxPriÜ™y
+, 
+pxC»©edTask
+ ) 
+	`xTaskG’”icC»©e
+ĞĞpvTaskCod), (…cNam), ( usSckD•th ), (…vP¬am‘” ), ( uxPriÜ™y ), (…xC»©edTask ), ( 
+NULL
+ ), ( NULL ) )
+
+	)
+
+3 
+	stskTaskCÚŒŞBlock
+
+
+5 vŞ©
+SckTy³_t
+ *
+	mpxTİOfSck
+;
+
+7 #iàĞ
+pÜtUSING_MPU_WRAPPERS
+ == 1 )
+
+8 
+xMPU_SETTINGS
+ 
+	mxMPUS‘tšgs
+;
+
+9 
+Ba£Ty³_t
+ 
+	mxUsšgStiÿÎyAÎoÿ‹dSck
+;
+
+12 
+Li¡I‹m_t
+ 
+	mxG’”icLi¡I‹m
+;
+
+13 
+Li¡I‹m_t
+ 
+	mxEv’tLi¡I‹m
+;
+
+14 
+UBa£Ty³_t
+ 
+	muxPriÜ™y
+;
+
+15 
+SckTy³_t
+ *
+	mpxSck
+;
+
+16 
+	mpcTaskName
+[ 
+cÚfigMAX_TASK_NAME_LEN
+ ];
+
+18 #iàĞ
+pÜtSTACK_GROWTH
+ > 0 )
+
+19 
+SckTy³_t
+ *
+	mpxEndOfSck
+;
+
+22 #iàĞ
+pÜtCRITICAL_NESTING_IN_TCB
+ == 1 )
+
+23 
+UBa£Ty³_t
+ 
+	muxCr™iÿlNe¡šg
+;
+
+26 #iàĞ
+cÚfigUSE_TRACE_FACILITY
+ == 1 )
+
+27 
+UBa£Ty³_t
+ 
+	muxTCBNumb”
+;
+
+28 
+UBa£Ty³_t
+ 
+	muxTaskNumb”
+;
+
+31 #iàĞ
+cÚfigUSE_MUTEXES
+ == 1 )
+
+32 
+UBa£Ty³_t
+ 
+	muxBa£PriÜ™y
+;
+
+33 
+UBa£Ty³_t
+ 
+	muxMu‹xesH–d
+;
+
+36 #iàĞ
+cÚfigUSE_APPLICATION_TASK_TAG
+ == 1 )
+
+37 
+TaskHookFunùiÚ_t
+ 
+	mpxTaskTag
+;
+
+40 #ifĞ
+cÚfigNUM_THREAD_LOCAL_STORAGE_POINTERS
+ > 0 )
+
+41 *
+	mpvTh»adLoÿlStÜagePoš‹rs
+[ 
+cÚfigNUM_THREAD_LOCAL_STORAGE_POINTERS
+ ];
+
+44 #iàĞ
+cÚfigGENERATE_RUN_TIME_STATS
+ == 1 )
+
+45 
+ušt32_t
+ 
+	mulRunTimeCouÁ”
+;
+
+48 #iàĞ
+cÚfigUSE_NEWLIB_REENTRANT
+ == 1 )
+
+56 
+_»’t
+ 
+	mxNewLib_»’t
+;
+
+59 #iàĞ
+cÚfigUSE_TASK_NOTIFICATIONS
+ == 1 )
+
+60 vŞ©
+ušt32_t
+ 
+	mulNÙif›dV®ue
+;
+
+61 vŞ©
+eNÙifyV®ue
+ 
+	meNÙifyS‹
+;
+
+64 } 
+	ttskTCB
+;
+
+68 
+tskTCB
+ 
+	tTCB_t
+;
+
+69 
+	#skYIELD_IF_USING_PREEMPTION
+(è
+	`pÜtYIELD_WITHIN_API
+()
+
+	)
+
+71 
+	#´vAddTaskToR—dyLi¡
+Ğ
+pxTCB
+ ) \
+
+72 
+	`ŒaûMOVED_TASK_TO_READY_STATE
+Ğ
+pxTCB
+ ); \
+
+73 
+	`skRECORD_READY_PRIORITY
+ĞĞ
+pxTCB
+ )->
+uxPriÜ™y
+ ); \
+
+74 
+	`vLi¡In£¹End
+Ğ&Ğ
+pxR—dyTasksLi¡s
+[ ( 
+pxTCB
+ )->
+uxPriÜ™y
+ ] ), &ĞĞpxTCB )->
+xG’”icLi¡I‹m
+ ) )
+
+	)
+
+	@
+1
+.
+1
+/usr/include
+12
+96
+common.c
+common.h
+heap2.c
+heap2.h
+list2.c
+list2.h
+main.c
+port.c
+queue2.c
+queue2.h
+task.c
+task.h

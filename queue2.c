@@ -1,4 +1,19 @@
-include "queue2.h"
+
+#include "common.h"
+#include "list2.h"
+#include "queue2.h"
+#include "task.h"
+#include "time.h"
+#define queueYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
+#define queueUNLOCKED                   ( ( BaseType_t ) -1 )
+#define queueLOCKED_UNMODIFIED          ( ( BaseType_t ) 0 ) 
+
+
+
+
+
+
+
 BaseType_t xQueueGenericReset( QueueHandle_t xQueue, BaseType_t xNewQueue )
 {
 Queue_t * const pxQueue = ( Queue_t * ) xQueue;
@@ -28,12 +43,12 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				}
 				else
 				{
-					mtCOVERAGE_TEST_MARKER();
+	
 				}
 			}
 			else
 			{
-				mtCOVERAGE_TEST_MARKER();
+				
 			}
 		}
 		else
@@ -145,7 +160,7 @@ UBaseType_t ux;
 		}
 		else
 		{
-			mtCOVERAGE_TEST_MARKER();
+			
 		}
 	}
 }
@@ -166,7 +181,7 @@ BaseType_t xReturn = pdFALSE;
 			}
 			else
 			{
-				mtCOVERAGE_TEST_MARKER();
+				
 			}
 		}
 		#endif /* configUSE_MUTEXES */
@@ -181,7 +196,7 @@ BaseType_t xReturn = pdFALSE;
 		}
 		else
 		{
-			mtCOVERAGE_TEST_MARKER();
+			
 		}
 	}
 	else
@@ -194,7 +209,7 @@ BaseType_t xReturn = pdFALSE;
 		}
 		else
 		{
-			mtCOVERAGE_TEST_MARKER();
+			
 		}
 
 		if( xPosition == queueOVERWRITE )
@@ -209,12 +224,12 @@ BaseType_t xReturn = pdFALSE;
 			}
 			else
 			{
-				mtCOVERAGE_TEST_MARKER();
+				
 			}
 		}
 		else
 		{
-			mtCOVERAGE_TEST_MARKER();
+			
 		}
 	}
 
@@ -266,7 +281,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				//traceQUEUE_SEND( pxQueue );
 				xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
-				#if ( configUSE_QUEUE_SETS == 1 )
+				#if ( configUSE_QUEUE_SETS == 1 )//false
 				{
 					if( pxQueue->pxQueueSetContainer != NULL )
 					{
@@ -279,7 +294,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						}
 						else
 						{
-							mtCOVERAGE_TEST_MARKER();
+							
 						}
 					}
 					else
@@ -298,7 +313,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 							}
 							else
 							{
-								mtCOVERAGE_TEST_MARKER();
+								
 							}
 						}
 						else if( xYieldRequired != pdFALSE )
@@ -311,7 +326,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						}
 						else
 						{
-							mtCOVERAGE_TEST_MARKER();
+							
 						}
 					}
 				}
@@ -331,7 +346,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						}
 						else
 						{
-							mtCOVERAGE_TEST_MARKER();
+							
 						}
 					}
 					else if( xYieldRequired != pdFALSE )
@@ -344,7 +359,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					}
 					else
 					{
-						mtCOVERAGE_TEST_MARKER();
+						
 					}
 				}
 				#endif /* configUSE_QUEUE_SETS */
@@ -375,7 +390,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				else
 				{
 					/* Entry time was already set. */
-					mtCOVERAGE_TEST_MARKER();
+					
 				}
 			}
 		}
@@ -447,7 +462,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 		}
 		else
 		{
-			mtCOVERAGE_TEST_MARKER();
+			
 		}
 		( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 MISRA exception as the casts are only redundant for some ports.  Also previous logic ensures a null pointer can only be passed to memcpy() when the count is 0. */
 	}
@@ -511,7 +526,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						}
 						else
 						{
-							mtCOVERAGE_TEST_MARKER();
+							
 						}
 					}
 					#endif /* configUSE_MUTEXES */
@@ -524,12 +539,12 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						}
 						else
 						{
-							mtCOVERAGE_TEST_MARKER();
+							
 						}
 					}
 					else
 					{
-						mtCOVERAGE_TEST_MARKER();
+						
 					}
 				}
 				else
@@ -551,12 +566,12 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						}
 						else
 						{
-							mtCOVERAGE_TEST_MARKER();
+							
 						}
 					}
 					else
 					{
-						mtCOVERAGE_TEST_MARKER();
+						
 					}
 				}
 
@@ -583,7 +598,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				else
 				{
 					/* Entry time was already set. */
-					mtCOVERAGE_TEST_MARKER();
+					
 				}
 			}
 		}
@@ -614,7 +629,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					}
 					else
 					{
-						mtCOVERAGE_TEST_MARKER();
+						
 					}
 				}
 				#endif
@@ -627,7 +642,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				}
 				else
 				{
-					mtCOVERAGE_TEST_MARKER();
+					
 				}
 			}
 			else
