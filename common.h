@@ -48,6 +48,13 @@
 	#define errQUEUE_YIELD                          ( -5 )
 	#define portSTACK_TYPE  uint64_t
 	#define pdFAIL          ( pdFALSE ) 
+	#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 1024 )
+	#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+	#define configTIMER_TASK_PRIORITY		( 2 )
+
+	#define portPRIVILEGE_BIT ( ( UBaseType_t ) 0x00 )
+
+
 	           
 
 

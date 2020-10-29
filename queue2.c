@@ -155,7 +155,7 @@ UBaseType_t ux;
 			xQueueRegistry[ ux ].pcQueueName = pcQueueName;
 			xQueueRegistry[ ux ].xHandle = xQueue;
 
-			traceQUEUE_REGISTRY_ADD( xQueue, pcQueueName );
+	//		traceQUEUE_REGISTRY_ADD( xQueue, pcQueueName );
 			break;
 		}
 		else
@@ -377,14 +377,14 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 					/* Return to the original privilege level before exiting
 					the function. */
-					traceQUEUE_SEND_FAILED( pxQueue );
+				//	traceQUEUE_SEND_FAILED( pxQueue );
 					return errQUEUE_FULL;
 				}
 				else if( xEntryTimeSet == pdFALSE )
 				{
 					/* The queue was full and a block time was specified so
 					configure the timeout structure. */
-					vTaskSetTimeOutState( &xTimeOut );
+				//zzy	vTaskSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
 				else
@@ -399,15 +399,15 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		/* Interrupts and other tasks can send to and receive from the queue
 		now the critical section has been exited. */
 
-		vTaskSuspendAll();
-		prvLockQueue( pxQueue );
+//		vTaskSuspendAll();
+//		prvLockQueue( pxQueue );
 
 		/* Update the timeout state to see if it has expired yet. */
 		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 		{
 			if( prvIsQueueFull( pxQueue ) != pdFALSE )
 			{
-				traceBLOCKING_ON_QUEUE_SEND( pxQueue );
+			//	traceBLOCKING_ON_QUEUE_SEND( pxQueue );
 				vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 
 				/* Unlocking the queue means queue events can effect the

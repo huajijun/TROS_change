@@ -1,5 +1,7 @@
 #include "time.h"
 #include "common.h"
+#include "task.h"
+#include "encoding.h"
 static List_t xActiveTimerList1;   
 static List_t xActiveTimerList2;   
 static List_t *pxCurrentTimerList; 
@@ -32,17 +34,17 @@ typedef struct tmrTimerQueueMessage
 
 static void prvSetNextTimerInterrupt(void)
 {
-	__asm volatile("csrr t0,mtimecmp");
+	__asm volatile("ld t0,0(%0)"::"r"mtimecmp);
 	__asm volatile("add t0,t0,%0" :: "r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	__asm volatile("csrw mtimecmp,t0");
+	__asm volatile("sd %0,0(t0)"::"r"mtimecmp);
 }
 
 /* Sets and enable the timer interrupt */                                           
 void vPortSetupTimer(void)                                                          
 {                                                                                
-  __asm volatile("csrr t0,mtime");                                                
+  __asm volatile("ld t0,0(%0)"::"r"mtimecmp);
   __asm volatile("add t0,t0,%0"::"r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));  
-  __asm volatile("csrw mtimecmp,t0");                                             
+  __asm volatile("sd %0,0(t0)"::"r"mtimecmp);
                                                                                    
    /* Enable timer interupt */                                                     
    __asm volatile("csrs mie,%0"::"r"(0x80));                                       
@@ -110,6 +112,57 @@ TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTi
 
 }
 
+static TickType_t prvGetNextExpireTime( BaseType_t * const pxListWasEmpty )
+{
+TickType_t xNextExpireTime;
+
+	/* Timers are listed in expiry time order, with the head of the list
+	referencing the task that will expire first.  Obtain the time at which
+	the timer with the nearest expiry time will expire.  If there are no
+	active timers then just set the next expire time to 0.  That will cause
+	this task to unblock when the tick count overflows, at which point the
+	timer lists will be switched and the next expiry time can be
+	re-assessed.  */
+	*pxListWasEmpty = listLIST_IS_EMPTY( pxCurrentTimerList );
+	if( *pxListWasEmpty == pdFALSE )
+	{
+		xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
+	}
+	else
+	{
+		/* Ensure the task unblocks when the tick count rolls over. */
+		xNextExpireTime = ( TickType_t ) 0U;
+	}
+
+	return xNextExpireTime;
+}
+
+static void prvTimerTask( void *pvParameters )
+{
+	TickType_t xNextExpireTime;
+	BaseType_t xListWasEmpty;
+	for( ;; )
+	{
+		/* Query the timers list to see if it contains any timers, and if so,
+		obtain the time at which the next timer will expire. */
+	//	xNextExpireTime = prvGetNextExpireTime( &xListWasEmpty );
+
+		/* If a timer has expired, process it.  Otherwise, block this task
+		until either a timer does expire, or a command is received. */
+	//	prvProcessTimerOrBlockTask( xNextExpireTime, xListWasEmpty );
+
+		/* Empty the command queue. */
+	//	prvProcessReceivedCommands();
+	}
+}
+
+
+
+
+
+
+
+
 BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) 
 { 
   BaseType_t xReturn = pdFAIL;                                                                                                                                                                                                 
@@ -129,7 +182,7 @@ BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommand
           }                                                                                      
           else                                                                                   
           {                                                                                      
-              xReturn = xQueueSendToBack( xTimerQueue, &xMessage, tmrNO_DELAY );                 
+              xReturn = xQueueSendToBack( xTimerQueue, &xMessage, 0 );                 
           }                                                                                      
       }                                                                                          
       else                                                                                       

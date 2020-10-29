@@ -1,7 +1,7 @@
 #include "encoding.h"
 .align 6
 .section .text,"ax"
-    machine_entry:
+    machine_trap_entry:
     j trap_entry
     
 .align 6
@@ -135,7 +135,7 @@ trap_entry:
     csrr a0, mcause
     csrr a1, mepc
     mv a2, sp
-    jal ulSyscallTrap
+//    jal ulSyscallTrap
 
     csrw mepc, a0
 

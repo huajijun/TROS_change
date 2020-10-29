@@ -1,9 +1,9 @@
 #include "common.h"
 #include "list2.h"
-#define CSR_MIE             0x304
-#define CSR_MTVEC           0x305
-#define mtimecmp			0x2004000
-#define mtime               0x200bff8
+#define CSR_MIE             (0x304)
+#define CSR_MTVEC           (0x305)
+#define mtimecmp	    (0x2004000)
+#define mtime               (0x200bff8)
 
 #define configTICK_CLOCK_HZ         ( ( unsigned long ) 1000000 ) 
 #define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )
