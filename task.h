@@ -84,6 +84,8 @@ typedef struct tskTaskControlBlock
 	#endif
 
 } tskTCB;
+void SetRunning(void);
+
 
 /* The old tskTCB name is maintained above then typedefed to the new TCB_t name
 below to enable the use of older kernel aware debuggers. */

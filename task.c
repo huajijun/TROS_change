@@ -798,3 +798,8 @@ static void prvInitialiseTaskLists( void )
     pxDelayedTaskList = &xDelayedTaskList1;                                                                
     pxOverflowDelayedTaskList = &xDelayedTaskList2;                                                        
 }                                                                                                          
+void SetRunning(void)
+{
+    BaseType_t xSchedulerRunning        = true;
+
+}
