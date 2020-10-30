@@ -53,10 +53,11 @@
 	#define configTIMER_TASK_PRIORITY		( 2 )
 
 	#define portPRIVILEGE_BIT ( ( UBaseType_t ) 0x00 )
-
-
-	           
-
-
+	#define taskYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
+	#define pvPortMallocAligned( x, puxStackBuffer ) ( ( ( puxStackBuffer ) == NULL ) ? ( pvPortMalloc( ( x ) ) ) : ( puxStackBuffer ) )
+	
+	                                                                       
+	#define portDISABLE_INTERRUPTS()                __asm volatile  ( "csrc mstatus,1" )
+	#define portENABLE_INTERRUPTS()                 __asm volatile  ( "csrs mstatus,1" )
 #endif
 

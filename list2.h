@@ -33,11 +33,14 @@ typedef struct xLIST
 	MiniListItem_t xListEnd;							/*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
 					/*< Set to a known value if configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
 } List_t;
-
+#define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )      ( ( pxListItem )->pvOwner = ( void * ) ( pxOwner ) )
 #define listLIST_IS_EMPTY( pxList ) ( ( BaseType_t ) ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) )
 #define listGET_OWNER_OF_HEAD_ENTRY( pxList )  ( (&( ( pxList )->xListEnd ))->pxNext->pvOwner )
-
-
+#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )   ( ( pxListItem )->xItemValue = ( xValue ) )
+#define listGET_LIST_ITEM_VALUE( pxListItem )   ( ( pxListItem )->xItemValue )
+#define listCURRENT_LIST_LENGTH( pxList )   ( ( pxList )->uxNumberOfItems )
+#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )  ( ( ( pxList )->xListEnd ).pxNext->xItemValue )
+#define listLIST_ITEM_CONTAINER( pxListItem ) ( ( pxListItem )->pvContainer )
 #define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )                                        \
 {                                                                                           \
 List_t * const pxConstList = ( pxList );                                                    \

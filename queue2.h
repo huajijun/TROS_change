@@ -15,7 +15,7 @@ typedef struct QUEUE_REGISTRY_ITEM
 
 #define portYIELD_WITHIN_API portYIELD
 #define portYIELD()					vPortYield()
-
+#define xQueueSendToBackFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( xQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
 
 #define taskENTER_CRITICAL()		portENTER_CRITICAL()
 #define taskEXIT_CRITICAL()			portEXIT_CRITICAL()

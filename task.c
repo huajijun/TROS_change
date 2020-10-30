@@ -2,6 +2,7 @@
 #include "list2.h"
 #include "queue2.h"
 #include "common.h"
+#include "other.h"
 static volatile BaseType_t xSchedulerRunning        = pdFALSE;
 static volatile UBaseType_t uxTopReadyPriority      = tskIDLE_PRIORITY;
 static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
@@ -12,14 +13,113 @@ static List_t * volatile pxOverflowDelayedTaskList;
 static List_t xPendingReadyList;  
 static volatile UBaseType_t uxCurrentNumberOfTasks  = ( UBaseType_t ) 0U;
 static volatile TickType_t xTickCount               = ( TickType_t ) 0U;  
+static void prvInitialiseTaskLists( void );
 
+
+static List_t xSuspendedTaskList;
 
 static volatile UBaseType_t uxPendedTicks           = ( UBaseType_t ) 0U;
 static volatile BaseType_t xYieldPending            = pdFALSE;           
 static volatile BaseType_t xNumOfOverflows          = ( BaseType_t ) 0;  
 static UBaseType_t uxTaskNumber                     = ( UBaseType_t ) 0U;
 static volatile TickType_t xNextTaskUnblockTime     = ( TickType_t ) 0U; 
-TCB_t * volatile pxCurrentTCB = NULL;
+TCB_t * volatile pxCurrentTCB = NULL;  
+#define prvAddTaskToReadyList( pxTCB ) vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ))
+BaseType_t xTaskIncrementTick( void );
+
+#define taskSWITCH_DELAYED_LISTS()                                                                  \
+{                                                                                                   \
+    List_t *pxTemp;                                                                                 \
+    pxTemp = pxDelayedTaskList;                                                                     \
+    pxDelayedTaskList = pxOverflowDelayedTaskList;                                                  \
+    pxOverflowDelayedTaskList = pxTemp;                                                             \
+    xNumOfOverflows++;                                                                              \
+    prvResetNextTaskUnblockTime();                                                                  \
+}       
+
+static void prvResetNextTaskUnblockTime( void )
+{                                                                                          
+TCB_t *pxTCB;
+   
+    if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
+    {
+        /* The new current delayed list is empty.  Set xNextTaskUnblockTime to
+        the maximum possible value so it is extremely unlikely that the
+        if( xTickCount >= xNextTaskUnblockTime ) test will pass until
+        there is an item in the delayed list. */
+        xNextTaskUnblockTime = portMAX_DELAY;
+    }
+    else
+    {
+        /* The new current delayed list is not empty, get the value of
+        the item at the head of the delayed list.  This is the time at
+        which the task at the head of the delayed list should be removed
+        from the Blocked state. */
+        ( pxTCB ) = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+        xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( ( pxTCB )->xGenericListItem ) );
+    }
+}  
+                                                                                             
+
+BaseType_t xTaskResumeAll( void )          
+{                                          
+	TCB_t *pxTCB;                              
+	BaseType_t xAlreadyYielded = pdFALSE;
+	taskENTER_CRITICAL();                                                                     
+	{                                                                                         
+	    --uxSchedulerSuspended;
+	                                                                                          
+	    if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
+	    {
+	        if( uxCurrentNumberOfTasks > ( UBaseType_t ) 0U )
+	        {
+	            /* Move any readied tasks from the pending list into the
+	            appropriate ready list. */
+	            while( listLIST_IS_EMPTY( &xPendingReadyList ) == pdFALSE )
+	            {
+	                pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xPendingReadyList ) );
+	                ( void ) uxListRemove( &( pxTCB->xEventListItem ) );
+	                ( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+	                prvAddTaskToReadyList( pxTCB );
+	                                                                                          
+	                /* If the moved task has a priority higher than the current
+	                task then a yield must be performed. */
+	                if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
+	                {
+	                    xYieldPending = pdTRUE;
+	                }
+	            }
+	                                                                                          
+	            if( uxPendedTicks > ( UBaseType_t ) 0U )
+	            {
+	                while( uxPendedTicks > ( UBaseType_t ) 0U )
+	                {
+	                    if( xTaskIncrementTick() != pdFALSE )
+	                    {
+	                        xYieldPending = pdTRUE;
+	                    }
+	                    --uxPendedTicks;
+	                }
+	            }                                              
+	            if( xYieldPending == pdTRUE )                        
+	            {   
+	                #if( configUSE_PREEMPTION != 0 )                 
+	                {                                                
+	                    xAlreadyYielded = pdTRUE;                     
+	                }                                                
+	                #endif                                           
+	                taskYIELD_IF_USING_PREEMPTION();                 
+	            }   
+ 
+	        }       
+	    }           
+        
+	}               
+	taskEXIT_CRITICAL();                                             
+	                
+	return xAlreadyYielded;                                          
+                                             
+}
 void prvTaskExitError(void)
 {
     for(;;);
@@ -134,14 +234,13 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 {                                                                                                   \
     while( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxTopReadyPriority ] ) ) )                      \
     {                                                                                               \
-        configASSERT( uxTopReadyPriority );                                                         \
         --uxTopReadyPriority;                                                                       \
     }                                                                                               \
     listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &( pxReadyTasksLists[ uxTopReadyPriority ] ) );      \
 } /* taskSELECT_HIGHEST_PRIORITY_TASK */                                                                   
                                                                                                            
 
-#define prvAddTaskToReadyList( pxTCB ) vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ))
+
 static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t * const puxStackBuffer )
 {
 TCB_t *pxNewTCB;
@@ -305,7 +404,6 @@ BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcN
 			prvAddTaskToReadyList(pxNewTCB);
 
 			xReturn = pdPASS;
-			portSETUP_TCB(pxNewTCB);
 		}
 		taskEXIT_CRITICAL();
 	}
@@ -341,7 +439,6 @@ void vTaskSwitchContext( void )
 	else
 	{
 		xYieldPending = pdFALSE;
-		traceTASK_SWITCHED_OUT();
 
 		#if ( configGENERATE_RUN_TIME_STATS == 1 )
 		{
@@ -365,7 +462,7 @@ void vTaskSwitchContext( void )
 		/* Select a new task to run using either the generic C or port
 		optimised asm code. */
 		taskSELECT_HIGHEST_PRIORITY_TASK();
-		traceTASK_SWITCHED_IN();
+		//traceTASK_SWITCHED_IN();
 
 		#if ( configUSE_NEWLIB_REENTRANT == 1 )
 		{
@@ -471,7 +568,7 @@ void vTaskEnterCritical( void )
 			critical section. */
 			if( pxCurrentTCB->uxCriticalNesting == 1 )
 			{
-				portASSERT_IF_IN_ISR();
+				//portASSERT_IF_IN_ISR();
 			}
 		}
 		else
@@ -495,3 +592,209 @@ void vTaskEnterCritical( void )
 		}
 			
 	}
+void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut ) 
+{                                                                                 
+    pxTimeOut->xOverflowCount = xNumOfOverflows;         
+    pxTimeOut->xTimeOnEntering = xTickCount;             
+}                                                        
+
+BaseType_t xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait )   
+{
+	BaseType_t xReturn;
+	const TickType_t xConstTickCount = xTickCount; 
+	if( *pxTicksToWait == portMAX_DELAY )
+	{                                    
+	    xReturn = pdFALSE;               
+	}                                    
+	if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xConstTickCount >= pxTimeOut->xTimeOnEntering ) )
+	{                                                                                                          
+		    xReturn = pdTRUE;                                                       
+	}                                                                           
+	else if( ( xConstTickCount - pxTimeOut->xTimeOnEntering ) < *pxTicksToWait )
+	{                                                                           
+		      
+		*pxTicksToWait -= ( xConstTickCount -  pxTimeOut->xTimeOnEntering );    
+		vTaskSetTimeOutState( pxTimeOut );                                      
+		xReturn = pdFALSE;                                                      
+	}                                                                           
+	else                                                                        
+	{                                                                           
+		xReturn = pdTRUE;                                                       
+	}                                                                           
+	return xReturn;                                                        
+}
+static void prvAddCurrentTaskToDelayedList( const TickType_t xTimeToWake )                 
+{                                                                                          
+    /* The list item will be inserted in wake time order. */                               
+    listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );           
+                                                                                           
+    if( xTimeToWake < xTickCount )                                                         
+    {                                                                                      
+        /* Wake time has overflowed.  Place this item in the overflow list. */             
+        vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );     
+    }                                                                                      
+    else                                                                                   
+    {                                                                                      
+        /* The wake time has not overflowed, so the current block list is used. */         
+        vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );             
+                                                                                           
+        /* If the task entering the blocked state was placed at the head of the            
+        list of blocked tasks then xNextTaskUnblockTime needs to be updated                
+        too. */                                                                            
+        if( xTimeToWake < xNextTaskUnblockTime )                                           
+        {                                                                                  
+            xNextTaskUnblockTime = xTimeToWake;                                            
+        }                                                                                                                                                                
+    }                                                                                      
+}                                                                                          
+
+void vTaskPlaceOnEventList( List_t * const pxEventList, const TickType_t xTicksToWait ) 
+{                                                                                       
+	TickType_t xTimeToWake;                                                                 
+	vListInsert( pxEventList, &( pxCurrentTCB->xEventListItem ) );
+	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 ) 
+	{                                                                              
+	    /* The current task must be in a ready list, so there is no need to        
+	    check, and the port reset macro can be called directly. */                   
+	}
+	if( xTicksToWait == portMAX_DELAY )                                               
+	{                                                                                 
+	    /* Add the task to the suspended task list instead of a delayed task          
+	    list to ensure the task is not woken by a timing event.  It will              
+	    block indefinitely. */                                                        
+	    vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );   
+	}                                                                                 
+	else                                                                              
+	{                                                                                 
+	    /* Calculate the time at which the task should be woken if the event          
+	    does not occur.  This may overflow but this doesn't matter, the               
+	    scheduler will handle it. */                                                  
+	    xTimeToWake = xTickCount + xTicksToWait;                                      
+	    prvAddCurrentTaskToDelayedList( xTimeToWake );                                
+	}                                                                                 
+                                                                              
+}                                                                     
+
+
+BaseType_t xTaskIncrementTick( void ) 
+{                                     
+	TCB_t * pxTCB;                        
+	TickType_t xItemValue;                
+	BaseType_t xSwitchRequired = pdFALSE; 
+	if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
+	{                                                    
+		++xTickCount;
+		             
+		{            
+			const TickType_t xConstTickCount = xTickCount;
+			                                              
+			if( xConstTickCount == ( TickType_t ) 0U )    
+			{                                             
+			    taskSWITCH_DELAYED_LISTS();               
+			}                                             
+			if( xConstTickCount >= xNextTaskUnblockTime )                      
+			{                                                                  
+			    for( ;; )                                                      
+			    {                                                              
+			        if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )    
+			        {                                                                                          
+			            xNextTaskUnblockTime = portMAX_DELAY;                  
+			            break;                                                 
+			        } 
+			        else                                                                     
+			        {                                                                        
+                               
+			            pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+			            xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
+			                                                                                 
+			            if( xConstTickCount < xItemValue )                                   
+			            {                                                                                                          
+			                xNextTaskUnblockTime = xItemValue;                               
+			                break;                                                           
+			            }                                                                    
+			            ( void ) uxListRemove( &( pxTCB->xGenericListItem ) );             
+			                                                                               
+			            /* Is the task waiting on an event also?  If so remove             
+			            it from the event list. */                                         
+			            if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
+			            {                                                                  
+			                ( void ) uxListRemove( &( pxTCB->xEventListItem ) );           
+			            }                                                                  
+			            else                                                               
+			            {                                                                  
+			                //mtCOVERAGE_TEST_MARKER();                                      
+			            }                                                                  
+			                                                                               
+			            /* Place the unblocked task into the appropriate ready             
+			            list. */                                                           
+			            prvAddTaskToReadyList( pxTCB );                                    
+			                                                                               
+			            /* A task being unblocked cannot cause an immediate                
+			            context switch if preemption is turned off. */                     
+			            {                                                       
+			                /* Preemption is on, but a context switch should    
+			                only be performed if the unblocked task has a       
+			                priority that is equal to or higher than the        
+			                currently executing task. */                        
+			                if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority ) 
+			                {                                                   
+			                    xSwitchRequired = pdTRUE;                       
+			                }                                                   
+			                else                                                
+			                {                                                   
+			                    //mtCOVERAGE_TEST_MARKER();                       
+			                }                                                   
+			            }
+			        }    
+			    }
+			}                                                   
+        }
+
+
+        if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ pxCurrentTCB->uxPriority ] ) ) > ( UBaseType_t ) 1 )
+        {                                                                                                      
+            xSwitchRequired = pdTRUE;                                                                          
+        }                                                                                                      
+                                                  
+    }
+    else
+    {
+    	++uxPendedTicks;
+    	if( xYieldPending != pdFALSE )
+    	{                             
+    	    xSwitchRequired = pdTRUE; 
+    	}                             
+
+    } 
+    return xSwitchRequired;                                             
+}
+static void prvInitialiseTaskLists( void )                                                                 
+{                                                                                                          
+	UBaseType_t uxPriority;                                                                                    
+                                                                                                           
+    for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+    {                                                                                                      
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );                                           
+    }                                                                                                      
+                                                                                                           
+    vListInitialise( &xDelayedTaskList1 );                                                                 
+    vListInitialise( &xDelayedTaskList2 );                                                                 
+    vListInitialise( &xPendingReadyList );                                                                 
+                                                                                                           
+    #if ( INCLUDE_vTaskDelete == 1 )                                                                       
+    {                                                                                                      
+        vListInitialise( &xTasksWaitingTermination );                                                      
+    }                                                                                                      
+    #endif /* INCLUDE_vTaskDelete */                                                                       
+                                                                                                           
+    #if ( INCLUDE_vTaskSuspend == 1 )                                                                      
+    {                                                                                                      
+        vListInitialise( &xSuspendedTaskList );                                                            
+    }                                                                                                      
+    #endif /* INCLUDE_vTaskSuspend */                                                                      
+                                                                                                           
+    /* Start with pxDelayedTaskList using list1 and the pxOverflowDelayedTaskList                          
+    using list2. */                                                                                        
+    pxDelayedTaskList = &xDelayedTaskList1;                                                                
+    pxOverflowDelayedTaskList = &xDelayedTaskList2;                                                        
+}                                                                                                          

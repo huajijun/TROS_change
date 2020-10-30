@@ -13,6 +13,7 @@ SECTIONS
 		*(.data)
 	}
 
+    . = ALIGN(0x1000);
 	.stack : {
        _stack_end = .;
        . += _STACK_SIZE;

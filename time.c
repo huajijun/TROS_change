@@ -101,11 +101,11 @@ TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTi
           pxNewTimer->pxCallbackFunction = pxCallbackFunction;                        
           vListInitialiseItem( &( pxNewTimer->xTimerListItem ) );                     
                                                                                       
-          traceTIMER_CREATE( pxNewTimer );                                            
+          //traceTIMER_CREATE( pxNewTimer );                                            
       }                                                                               
       else                                                                            
       {                                                                               
-          traceTIMER_CREATE_FAILED();                                                 
+          //traceTIMER_CREATE_FAILED();                                                 
       }                                                                               
   }
   return ( TimerHandle_t ) pxNewTimer;                                                                                   

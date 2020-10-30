@@ -5,6 +5,7 @@
 #define TASK
 #define xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( NULL ), ( NULL ) )
 static volatile UBaseType_t uxSchedulerSuspended    = ( UBaseType_t ) pdFALSE;
+void vTaskPlaceOnEventList( List_t * const pxEventList, const TickType_t xTicksToWait );
 typedef void * TaskHandle_t;
 typedef struct xMEMORY_REGION 
 {                             

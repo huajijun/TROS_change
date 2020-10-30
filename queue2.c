@@ -9,10 +9,30 @@
 #define queueLOCKED_UNMODIFIED          ( ( BaseType_t ) 0 ) 
 
 
+BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQueue, BaseType_t * const pxHigherPriorityTaskWoken, const BaseType_t xCopyPosition );
 
+extern void vTaskSuspendAll( void );
+static BaseType_t prvIsQueueFull( const Queue_t *pxQueue );
 
-
-
+static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue )    
+{                                                              
+BaseType_t xReturn;                                            
+                                                               
+    taskENTER_CRITICAL();                                      
+    {                                                          
+        if( pxQueue->uxMessagesWaiting == ( UBaseType_t )  0 ) 
+        {                                                      
+            xReturn = pdTRUE;                                  
+        }                                                      
+        else                                                   
+        {                                                      
+            xReturn = pdFALSE;                                 
+        }                                                      
+    }                                                          
+    taskEXIT_CRITICAL();                                       
+                                                               
+    return xReturn;                                            
+}                                                              
 
 BaseType_t xQueueGenericReset( QueueHandle_t xQueue, BaseType_t xNewQueue )
 {
@@ -41,15 +61,8 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				{
 					queueYIELD_IF_USING_PREEMPTION();
 				}
-				else
-				{
-	
-				}
 			}
-			else
-			{
-				
-			}
+
 		}
 		else
 		{
@@ -241,6 +254,7 @@ BaseType_t xReturn = pdFALSE;
 
 
 
+                        
 
 
 
@@ -399,7 +413,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		/* Interrupts and other tasks can send to and receive from the queue
 		now the critical section has been exited. */
 
-//		vTaskSuspendAll();
+		vTaskSuspendAll();
 //		prvLockQueue( pxQueue );
 
 		/* Update the timeout state to see if it has expired yet. */
@@ -415,7 +429,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				remove this task from the event	list again - but as the
 				scheduler is suspended the task will go onto the pending
 				ready last instead of the actual ready list. */
-				prvUnlockQueue( pxQueue );
+				//prvUnlockQueue( pxQueue );
 
 				/* Resuming the scheduler will move tasks from the pending
 				ready list into the ready list - so it is feasible that this
@@ -430,19 +444,19 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			else
 			{
 				/* Try again. */
-				prvUnlockQueue( pxQueue );
+				//prvUnlockQueue( pxQueue );
 				( void ) xTaskResumeAll();
 			}
 		}
 		else
 		{
 			/* The timeout has expired. */
-			prvUnlockQueue( pxQueue );
+			//prvUnlockQueue( pxQueue );
 			( void ) xTaskResumeAll();
 
 			/* Return to the original privilege level before exiting the
 			function. */
-			traceQUEUE_SEND_FAILED( pxQueue );
+			//traceQUEUE_SEND_FAILED( pxQueue );
 			return errQUEUE_FULL;
 		}
 	}
@@ -483,11 +497,11 @@ TimeOut_t xTimeOut;
 int8_t *pcOriginalReadPosition;
 Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
-	configASSERT( pxQueue );
-	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+//	configASSERT( pxQueue );
+//	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
 	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 	{
-		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+//		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	}
 	#endif
 
@@ -511,7 +525,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 				if( xJustPeeking == pdFALSE )
 				{
-					traceQUEUE_RECEIVE( pxQueue );
+					//traceQUEUE_RECEIVE( pxQueue );
 
 					/* Actually removing data, not just peeking. */
 					--( pxQueue->uxMessagesWaiting );
@@ -549,7 +563,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				}
 				else
 				{
-					traceQUEUE_PEEK( pxQueue );
+					//traceQUEUE_PEEK( pxQueue );
 
 					/* The data is not being removed, so reset the read
 					pointer. */
@@ -585,7 +599,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					/* The queue was empty and no block time is specified (or
 					the block time has expired) so leave now. */
 					taskEXIT_CRITICAL();
-					traceQUEUE_RECEIVE_FAILED( pxQueue );
+					//traceQUEUE_RECEIVE_FAILED( pxQueue );
 					return errQUEUE_EMPTY;
 				}
 				else if( xEntryTimeSet == pdFALSE )
@@ -608,14 +622,14 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		now the critical section has been exited. */
 
 		vTaskSuspendAll();
-		prvLockQueue( pxQueue );
+	//	prvLockQueue( pxQueue );
 
 		/* Update the timeout state to see if it has expired yet. */
 		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 		{
 			if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 			{
-				traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
+				//traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
 
 				#if ( configUSE_MUTEXES == 1 )
 				{
@@ -635,7 +649,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				#endif
 
 				vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
-				prvUnlockQueue( pxQueue );
+				//prvUnlockQueue( pxQueue );
 				if( xTaskResumeAll() == pdFALSE )
 				{
 					portYIELD_WITHIN_API();
@@ -648,21 +662,44 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			else
 			{
 				/* Try again. */
-				prvUnlockQueue( pxQueue );
+				//prvUnlockQueue( pxQueue );
 				( void ) xTaskResumeAll();
 			}
 		}
 		else
 		{
-			prvUnlockQueue( pxQueue );
+			//prvUnlockQueue( pxQueue );
 			( void ) xTaskResumeAll();
-			traceQUEUE_RECEIVE_FAILED( pxQueue );
+			//traceQUEUE_RECEIVE_FAILED( pxQueue );
 			return errQUEUE_EMPTY;
 		}
 	}
 }
+                                                                         
+static BaseType_t prvIsQueueFull( const Queue_t *pxQueue )
+{                                                         
+	BaseType_t xReturn;                                       
+                                                          
+    taskENTER_CRITICAL();                                 
+    {                                                     
+        if( pxQueue->uxMessagesWaiting == pxQueue->uxLength)
+        {                                                 
+            xReturn = pdTRUE;                             
+        }                                                 
+        else                                              
+        {                                                 
+            xReturn = pdFALSE;                            
+        }                                                 
+    }                                                     
+    taskEXIT_CRITICAL();                                  
+                                                          
+    return xReturn;                                       
+}                                                
 
 
 
+BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQueue, BaseType_t * const pxHigherPriorityTaskWoken, const BaseType_t xCopyPosition )
+{                                                                                                                                                                          
+}                                                                                                                           
 
 
