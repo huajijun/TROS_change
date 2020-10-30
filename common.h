@@ -7,9 +7,6 @@
 
 	#define queueQUEUE_TYPE_BASE                ( ( uint8_t ) 0U )
 
-	#define	queueSEND_TO_BACK		( ( BaseType_t ) 0 )
-	#define	queueSEND_TO_FRONT		( ( BaseType_t ) 1 )
-	#define queueOVERWRITE			( ( BaseType_t ) 2 )
 	#define bktQUEUE_LENGTH             ( 5 )
 	#define size_t int
 	#define uint8_t  char

@@ -44,13 +44,9 @@ typedef unsigned long UBaseType_t;
 
 #define queueQUEUE_TYPE_BASE                ( ( uint8_t ) 0U )
 
-#define	queueSEND_TO_BACK		( ( BaseType_t ) 0 )
-#define	queueSEND_TO_FRONT		( ( BaseType_t ) 1 )
-#define queueOVERWRITE			( ( BaseType_t ) 2 )
 
-#define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
 
-#define xQueueSend( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
+#define xQueueSend( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_FRONT )
 #define xQueueSendToBack( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
 
 #define bktQUEUE_LENGTH             ( 5 )

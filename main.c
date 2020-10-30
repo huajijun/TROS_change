@@ -1,17 +1,20 @@
 #include "heap2.h"
 #include "queue2.h"
 #include "common.h"
+
+BaseType_t xData = 0;
 void vSyscallInit(void)
 {
-	int a =1,b = 2;
+	BaseType_t a =1,b = 2;
 	int *ptr;
 	a +=b;
+	QueueHandle_t testqueuet;
 	ptr = (int*)pvPortMalloc(50);
-	BaseType_t xData;
 	TickType_t xTimeToBlock = 0;
-	xTestQueue = xQueueCreate( bktQUEUE_LENGTH, sizeof( BaseType_t ) );
+	testqueuet = xQueueCreate( bktQUEUE_LENGTH, sizeof( BaseType_t ) );
 
-	if( xQueueReceive( xTestQueue, &xData, xTimeToBlock ) != errQUEUE_EMPTY )
+	xQueueSend(testqueuet,&a,0);
+	if( xQueueReceive( testqueuet, &xData, xTimeToBlock ) != errQUEUE_EMPTY )
 	{
 		//xErrorOccurred = pdTRUE;
 	}
