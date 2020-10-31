@@ -3,6 +3,7 @@
 #include "queue2.h"
 #include "common.h"
 #include "other.h"
+#define portBYTE_ALIGNMENT_MASK (0x001f)
 static volatile BaseType_t xSchedulerRunning        = pdFALSE;
 static volatile UBaseType_t uxTopReadyPriority      = tskIDLE_PRIORITY;
 static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
@@ -414,11 +415,12 @@ BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcN
 
 	if( xReturn == pdPASS )
 	{
+         SetRunning();
 		if( xSchedulerRunning != pdFALSE )
 		{
 			/* If the created task is of a higher priority than the current task
 			then it should run now. */
-			if( pxCurrentTCB->uxPriority < uxPriority )
+		//	if( pxCurrentTCB->uxPriority < uxPriority )
 			{
 				taskYIELD_IF_USING_PREEMPTION();
 			}
@@ -800,6 +802,6 @@ static void prvInitialiseTaskLists( void )
 }                                                                                                          
 void SetRunning(void)
 {
-    BaseType_t xSchedulerRunning        = true;
+    xSchedulerRunning++;
 
 }

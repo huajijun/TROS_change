@@ -1,0 +1,12 @@
+pxNewTCB = 0x10007058    s0 -32
+
+0x00000000100014f6
+
+pxTopOfStack =  10007040
++ 96 pxStack = 10003048         
+
+priority = addr 0x100070b0
+
+1001c700 <pxCurrentTCB>
+
+1001c068 <pxReadyTasksLists>     +20*40 = 1001c388

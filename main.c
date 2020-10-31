@@ -7,7 +7,6 @@ BaseType_t xData = 0;
 void TestProgram(void);
 void vSyscallInit(void)
 {
-	SetRunning();
 	xTaskCreate( TestProgram, "TestProgram", 4096, NULL, 20, NULL );
 }
 

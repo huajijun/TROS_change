@@ -32,7 +32,7 @@
 	#define queueSEND_TO_FRONT      ( ( BaseType_t ) 1 ) 
 	#define queueOVERWRITE          ( ( BaseType_t ) 2 ) 
 
-	#define configMAX_PRIORITIES        ( 5 )
+	#define configMAX_PRIORITIES        ( 30 )
 	#define portYIELD_WITHIN_API portYIELD
 	#define portYIELD()                 vPortYield()
 	#define StackType_t uint32_t
@@ -53,7 +53,7 @@
 	#define taskYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
 	#define pvPortMallocAligned( x, puxStackBuffer ) ( ( ( puxStackBuffer ) == NULL ) ? ( pvPortMalloc( ( x ) ) ) : ( puxStackBuffer ) )
 	
-	                                                                       
+	#define portSTACK_GROWTH            ( -1 )                                               
 	#define portDISABLE_INTERRUPTS()                __asm volatile  ( "csrc mstatus,1" )
 	#define portENABLE_INTERRUPTS()                 __asm volatile  ( "csrs mstatus,1" )
 #endif
