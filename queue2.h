@@ -40,7 +40,7 @@ typedef unsigned long UBaseType_t;
 
 #define configUSE_QUEUE_SETS 0
 
-#define tskIDLE_PRIORITY            ( ( UBaseType_t ) 0U )
+#define tskIDLE_PRIORITY            ( ( UBaseType_t ) 30U )
 
 #define queueQUEUE_TYPE_BASE                ( ( uint8_t ) 0U )
 

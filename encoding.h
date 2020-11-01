@@ -1,4 +1,4 @@
-#ifdef __riscv_xlen
+#ifndef __riscv_xlen
 #define  STORE sd
 #define LOAD    ld
 #define REGBYTES    8

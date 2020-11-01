@@ -124,8 +124,8 @@ TIMER_CMP_INT:
 
 
 vPortYield:
-	portSAVE_CONTEXT
-	portSAVE_RA
+//	portSAVE_CONTEXT
+//	portSAVE_RA
 	jal	vTaskSwitchContext
 	portRESTORE_CONTEXT
 
