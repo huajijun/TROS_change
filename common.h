@@ -60,8 +60,10 @@
 	#define portPRIVILEGE_BIT ( ( UBaseType_t ) 0x00 )  
 	#define tskIDLE_PRIORITY            ( ( UBaseType_t ) 0U )
 	#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters ) 
-	BaseType_t xStartContext[31] = {0};
 	#define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )
 	#define portTICK_PERIOD_MS          ( ( TickType_t ) (1000 / configTICK_RATE_HZ) ) 
+	
+	#define tskIDLE_STACK_SIZE	configMINIMAL_STACK_SIZE
+
 #endif
 

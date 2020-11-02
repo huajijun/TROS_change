@@ -2,21 +2,20 @@
 #include "queue2.h"
 #include "common.h"
 #include "task.h"
+#include "time.h"
 
 #define mainCHECK_TIMER_PERIOD_MS           ( 3000UL / portTICK_PERIOD_MS )
 #define mainDONT_BLOCK                      ( 0UL )	
 BaseType_t xData = 0;
 void TestProgram(void);
+void prvCheckTimerCallback(void);
 void vSyscallInit(void)
 {
+	TimerHandle_t xCheckTimer = NULL;
+
 	xTaskCreate( TestProgram, "TestProgram", 4096, NULL, 20, NULL );
 
-	xCheckTimer = xTimerCreate( "CheckTimer",                 
-	                            ( mainCHECK_TIMER_PERIOD_MS ),
-	                            pdTRUE,                       
-	                            ( void * ) 0,                 
-	                            prvCheckTimerCallback   //need display      
-	                          );    
+	xCheckTimer = xTimerCreate( "CheckTimer",( mainCHECK_TIMER_PERIOD_MS ),pdTRUE,( void * ) 0,prvCheckTimerCallback);    
 
 	if( xCheckTimer != NULL )                      
 	{           
@@ -39,4 +38,7 @@ void TestProgram(void)
 		//xErrorOccurred = pdTRUE;
 	}
 }
-
+void prvCheckTimerCallback(void)
+{
+	int a=0;
+}

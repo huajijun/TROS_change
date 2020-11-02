@@ -32,6 +32,7 @@ typedef struct tmrTimerQueueMessage
 
 
 
+static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty ); 
 static void prvSetNextTimerInterrupt(void)
 {
 	__asm volatile("ld t0,0(%0)"::"r"mtimecmp);
@@ -157,13 +158,57 @@ static void prvTimerTask( void *pvParameters )
 }
 
 
+static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched )                                           
+{                                                                                                                           
+TickType_t xTimeNow;                                                                                                        
+ static TickType_t xLastTime = ( TickType_t ) 0U; /*lint !e956 Variable is only accessible to one task. */   
+                                                                                                                            
+    xTimeNow = xTaskGetTickCount();                                                                                         
+                                                                                                                            
+    if( xTimeNow < xLastTime )                                                                                              
+    {                                                                                                                       
+        prvSwitchTimerLists();                                                                                              
+        *pxTimerListsWereSwitched = pdTRUE;                                                                                 
+    }                                                                                                                       
+    else                                                                                                                    
+    {                                                                                                                       
+        *pxTimerListsWereSwitched = pdFALSE;                                                                                
+    }                                                                                                                       
+                                                                                                                            
+    xLastTime = xTimeNow;                                                                                                   
+                                                                                                                            
+    return xTimeNow;                                                                                                        
+}                                                                                                                           
+
 
 static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty ) 
 {                                                                                                    
-  TickType_t xTimeNow;                                                                                 
-  BaseType_t xTimerListsWereSwitched;                                                                  
-
-
+	TickType_t xTimeNow;                                                                                 
+  	BaseType_t xTimerListsWereSwitched;                                                                  
+	xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
+	if( xTimerListsWereSwitched == pdFALSE )
+	{
+	  /* The tick count has not overflowed, has the timer expired? */                                   
+  		if( ( xListWasEmpty == pdFALSE ) && ( xNextExpireTime <= xTimeNow ) )                             
+  		{                                                                                                 
+      			( void ) xTaskResumeAll();                                                                    
+      			prvProcessExpiredTimer( xNextExpireTime, xTimeNow );                                          
+  		}                                                                                                 
+  		else                                                                                              
+  		{                                                                                                 
+      			if( xListWasEmpty != pdFALSE )                                                                
+      			{                                                                                             
+          			xListWasEmpty = listLIST_IS_EMPTY( pxOverflowTimerList );                                 
+      			}                                                                                             
+                                                                                                    
+      			vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ), xListWasEmpty ); 
+                                                                                                    
+      			if( xTaskResumeAll() == pdFALSE )                                                             
+      			{	                                                                                             
+          			portYIELD_WITHIN_API();                                                                   
+      			}                                                                                             
+		}
+	}
 }
 
 
@@ -209,3 +254,101 @@ BaseType_t xTimerCreateTimerTask( void )
     }
     return xReturn;
 }
+
+
+
+
+static void prvProcessReceivedCommands( void )
+{
+DaemonTaskMessage_t xMessage;
+Timer_t *pxTimer;
+BaseType_t xTimerListsWereSwitched, xResult;
+TickType_t xTimeNow;
+
+    while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL ) 
+    {
+        #if ( INCLUDE_xTimerPendFunctionCall == 1 )
+        {
+            if( xMessage.xMessageID < ( BaseType_t ) 0 )
+            {
+                const CallbackParameters_t * const pxCallback = &( xMessage.u.xCallbackParameters );
+
+                configASSERT( pxCallback );
+
+                pxCallback->pxCallbackFunction( pxCallback->pvParameter1, pxCallback->ulParameter2 );
+            }
+            else
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+        }
+	#endif
+	if( xMessage.xMessageID >= ( BaseType_t ) 0 )
+	{
+		pxTimer = xMessage.u.xTimerParameters.pxTimer;
+
+		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
+		{
+			( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+
+		xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
+
+		switch( xMessage.xMessageID )
+			{
+				case tmrCOMMAND_START :
+			    case tmrCOMMAND_START_FROM_ISR :
+			    case tmrCOMMAND_RESET :
+			    case tmrCOMMAND_RESET_FROM_ISR :
+				case tmrCOMMAND_START_DONT_TRACE :
+					if( prvInsertTimerInActiveList( pxTimer,  xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.u.xTimerParameters.xMessageValue ) == pdTRUE )
+					{
+						pxTimer->pxCallbackFunction( ( TimerHandle_t ) pxTimer );
+						traceTIMER_EXPIRED( pxTimer );
+
+						if( pxTimer->uxAutoReload == ( UBaseType_t ) pdTRUE )
+						{
+							xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
+							configASSERT( xResult );
+							( void ) xResult;
+						}
+						else
+						{
+							mtCOVERAGE_TEST_MARKER();
+						}
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
+					break;
+
+				case tmrCOMMAND_STOP :
+				case tmrCOMMAND_STOP_FROM_ISR :
+					break;
+
+				case tmrCOMMAND_CHANGE_PERIOD :
+				case tmrCOMMAND_CHANGE_PERIOD_FROM_ISR :
+					pxTimer->xTimerPeriodInTicks = xMessage.u.xTimerParameters.xMessageValue;
+					configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
+
+					( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
+					break;
+					case tmrCOMMAND_DELETE :
+					vPortFree( pxTimer );
+					break;
+
+				default	:
+					break;
+			}
+		}
+	}
+}
+
+
+
+

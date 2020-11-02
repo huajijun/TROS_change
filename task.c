@@ -27,6 +27,7 @@ static volatile TickType_t xNextTaskUnblockTime     = ( TickType_t ) 0U;
 TCB_t * volatile pxCurrentTCB = NULL;  
 
 
+TickType_t xTaskGetTickCount( void );
 #define prvAddTaskToReadyList( pxTCB ) vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ))
 BaseType_t xTaskIncrementTick( void );
 
@@ -39,6 +40,32 @@ BaseType_t xTaskIncrementTick( void );
     xNumOfOverflows++;                                                                              \
     prvResetNextTaskUnblockTime();                                                                  \
 }       
+
+static portTASK_FUNCTION( prvIdleTask, pvParameters )
+{
+	for(;;)
+	{
+		if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 ) 
+		{                                                                                               
+		    taskYIELD();                                                                                
+		}                                                                                               
+	}
+}
+
+
+TickType_t xTaskGetTickCount( void )
+{
+	TickType_t xTicks;
+
+	//portTICK_TYPE_ENTER_CRITICAL();
+	{
+		xTicks = xTickCount;
+	}
+	//portTICK_TYPE_EXIT_CRITICAL();
+
+	return xTicks;
+}
+
 
 static void prvResetNextTaskUnblockTime( void )
 {                                                                                          
@@ -822,13 +849,3 @@ void vTaskStartScheduler( void )
 }                        
 
 
-static portTASK_FUNCTION( prvIdleTask, pvParameters )
-{
-	for(;;)
-	{
-		if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 ) 
-		{                                                                                               
-		    taskYIELD();                                                                                
-		}                                                                                               
-	}
-}
