@@ -22,6 +22,10 @@ typedef struct xTIME_OUT
 #define taskSCHEDULER_SUSPENDED     ( ( BaseType_t ) 0 )
 #define taskSCHEDULER_NOT_STARTED   ( ( BaseType_t ) 1 )
 #define taskSCHEDULER_RUNNING       ( ( BaseType_t ) 2 )
+extern void vPortYield( void );                  
+#define portYIELD()                 vPortYield() 
+
+#define taskYIELD()                 portYIELD()
 
 typedef struct tskTaskControlBlock
 {

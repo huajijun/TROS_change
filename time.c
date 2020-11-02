@@ -145,20 +145,26 @@ static void prvTimerTask( void *pvParameters )
 	{
 		/* Query the timers list to see if it contains any timers, and if so,
 		obtain the time at which the next timer will expire. */
-	//	xNextExpireTime = prvGetNextExpireTime( &xListWasEmpty );
+		xNextExpireTime = prvGetNextExpireTime( &xListWasEmpty );
 
 		/* If a timer has expired, process it.  Otherwise, block this task
 		until either a timer does expire, or a command is received. */
-	//	prvProcessTimerOrBlockTask( xNextExpireTime, xListWasEmpty );
+		prvProcessTimerOrBlockTask( xNextExpireTime, xListWasEmpty );
 
 		/* Empty the command queue. */
-	//	prvProcessReceivedCommands();
+		prvProcessReceivedCommands();
 	}
 }
 
 
 
+static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty ) 
+{                                                                                                    
+  TickType_t xTimeNow;                                                                                 
+  BaseType_t xTimerListsWereSwitched;                                                                  
 
+
+}
 
 
 

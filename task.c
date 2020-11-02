@@ -25,6 +25,8 @@ static volatile BaseType_t xNumOfOverflows          = ( BaseType_t ) 0;
 static UBaseType_t uxTaskNumber                     = ( UBaseType_t ) 0U;
 static volatile TickType_t xNextTaskUnblockTime     = ( TickType_t ) 0U; 
 TCB_t * volatile pxCurrentTCB = NULL;  
+
+
 #define prvAddTaskToReadyList( pxTCB ) vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ))
 BaseType_t xTaskIncrementTick( void );
 
@@ -415,7 +417,6 @@ BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcN
 
 	if( xReturn == pdPASS )
 	{
-         SetRunning();
 		if( xSchedulerRunning != pdFALSE )
 		{
 			/* If the created task is of a higher priority than the current task
@@ -535,20 +536,7 @@ BaseType_t xTaskGetSchedulerState( void )
                                                              
     return xReturn;                                          
 }                                                            
-void vTaskStartScheduler( void ) 
-{
-	BaseType_t xReturn;
-	if( xReturn == pdPASS )                
-	{                                      
-	    xReturn = xTimerCreateTimerTask(); 
-	}                                      
-	if( xPortStartScheduler() != pdFALSE )                           
-	{                                                                
-	    /* Should not reach here as if the scheduler is running the  
-	    function will not return. */                                 
-	}                                                                
 
-}
 
 void vTaskSuspendAll( void )
  {
@@ -804,4 +792,43 @@ void SetRunning(void)
 {
     xSchedulerRunning++;
 
+}
+
+
+void vTaskStartScheduler( void )   
+{                                  
+	BaseType_t xReturn;      
+	xReturn = xTaskCreate( prvIdleTask, "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), NULL );     
+	if( xReturn == pdPASS )
+	{                                     
+	    xReturn = xTimerCreateTimerTask();
+	}                                     
+		if( xReturn == pdPASS )
+		{                      
+			portDISABLE_INTERRUPTS(); 
+			xNextTaskUnblockTime = portMAX_DELAY; 
+			xSchedulerRunning = pdTRUE;           
+			xTickCount = ( TickType_t ) 0U;       
+			if( xPortStartScheduler() != pdFALSE )                                 
+			{                                                                      
+			    /* Should not reach here as if the scheduler is running the        
+			    function will not return. */                                       
+			}                                                                      
+			else                                                                   
+			{                                                                      
+			    /* Should only reach here if a task calls xTaskEndScheduler(). */  
+			}       
+		}                                                               
+}                        
+
+
+static portTASK_FUNCTION( prvIdleTask, pvParameters )
+{
+	for(;;)
+	{
+		if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 ) 
+		{                                                                                               
+		    taskYIELD();                                                                                
+		}                                                                                               
+	}
 }

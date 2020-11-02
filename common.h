@@ -56,5 +56,12 @@
 	#define portSTACK_GROWTH            ( -1 )                                               
 	#define portDISABLE_INTERRUPTS()                __asm volatile  ( "csrc mstatus,1" )
 	#define portENABLE_INTERRUPTS()                 __asm volatile  ( "csrs mstatus,1" )
+
+	#define portPRIVILEGE_BIT ( ( UBaseType_t ) 0x00 )  
+	#define tskIDLE_PRIORITY            ( ( UBaseType_t ) 0U )
+	#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters ) 
+	BaseType_t xStartContext[31] = {0};
+	#define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )
+	#define portTICK_PERIOD_MS          ( ( TickType_t ) (1000 / configTICK_RATE_HZ) ) 
 #endif
 
