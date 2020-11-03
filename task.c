@@ -28,8 +28,24 @@ TCB_t * volatile pxCurrentTCB = NULL;
 
 
 TickType_t xTaskGetTickCount( void );
-#define prvAddTaskToReadyList( pxTCB ) vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ))
+
 BaseType_t xTaskIncrementTick( void );
+
+
+#define taskRECORD_READY_PRIORITY( uxPriority )														\
+	{																									\
+		if( ( uxPriority ) > uxTopReadyPriority )														\
+		{																								\
+			uxTopReadyPriority = ( uxPriority );														\
+		}																								\
+	} 
+
+
+#define prvAddTaskToReadyList( pxTCB ) \
+	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );	\
+	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ))
+
+
 
 #define taskSWITCH_DELAYED_LISTS()                                                                  \
 {                                                                                                   \
