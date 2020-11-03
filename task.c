@@ -15,7 +15,7 @@ static List_t xPendingReadyList;
 static volatile UBaseType_t uxCurrentNumberOfTasks  = ( UBaseType_t ) 0U;
 static volatile TickType_t xTickCount               = ( TickType_t ) 0U;  
 static void prvInitialiseTaskLists( void );
-
+void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, const TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely );
 
 static List_t xSuspendedTaskList;
 
@@ -830,22 +830,44 @@ void vTaskStartScheduler( void )
 	{                                     
 	    xReturn = xTimerCreateTimerTask();
 	}                                     
-		if( xReturn == pdPASS )
-		{                      
-			portDISABLE_INTERRUPTS(); 
-			xNextTaskUnblockTime = portMAX_DELAY; 
-			xSchedulerRunning = pdTRUE;           
-			xTickCount = ( TickType_t ) 0U;       
-			if( xPortStartScheduler() != pdFALSE )                                 
-			{                                                                      
-			    /* Should not reach here as if the scheduler is running the        
-			    function will not return. */                                       
-			}                                                                      
-			else                                                                   
-			{                                                                      
-			    /* Should only reach here if a task calls xTaskEndScheduler(). */  
-			}       
-		}                                                               
+	if( xReturn == pdPASS )
+	{                      
+		portDISABLE_INTERRUPTS(); 
+		xNextTaskUnblockTime = portMAX_DELAY; 
+		xSchedulerRunning = pdTRUE;           
+		xTickCount = ( TickType_t ) 0U;       
+		if( xPortStartScheduler() != pdFALSE );                                 
+	}                                                               
 }                        
+
+void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, const TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )    
+{                                                                                                                                        
+	TickType_t xTimeToWake;                                                                                                                  
+                                                                                                                                         
+                                                                                           
+    vListInsertEnd( pxEventList, &( pxCurrentTCB->xEventListItem ) );                                                                    
+                                                                                                                                         
+                                                                   
+    if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )                                                       
+    {                                                                                                                                    
+        /* The current task must be in a ready list, so there is no need to                                                              
+        check, and the port reset macro can be called directly. */                                                                                                                              
+    }                                                                                                                                    
+    if( xWaitIndefinitely == pdTRUE )                                                
+    {                                                                                
+        /* Add the task to the suspended task list instead of a delayed              
+        task list to ensure the task is not woken by a timing event.  It             
+        will block indefinitely. */                                                  
+        vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );  
+    }                                                                                
+    else                                                                             
+    {                                                                                
+        /* Calculate the time at which the task should be woken if the               
+        event does not occur.  This may overflow but this doesn't                    
+        matter. */                                                                   
+        xTimeToWake = xTickCount + xTicksToWait;                                                                                        
+        prvAddCurrentTaskToDelayedList( xTimeToWake );                               
+    }                                                                                
+}                                                          
 
 

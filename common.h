@@ -62,7 +62,7 @@
 	#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters ) 
 	#define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )
 	#define portTICK_PERIOD_MS          ( ( TickType_t ) (1000 / configTICK_RATE_HZ) ) 
-	
+	#define portYIELD_WITHIN_API portYIELD
 	#define tskIDLE_STACK_SIZE	configMINIMAL_STACK_SIZE
 
 #endif

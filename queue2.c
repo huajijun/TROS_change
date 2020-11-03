@@ -703,3 +703,15 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pv
 }                                                                                                                           
 
 
+void vQueueWaitForMessageRestricted( QueueHandle_t xQueue, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )  
+{                                                                                                                         
+	Queue_t * const pxQueue = ( Queue_t * ) xQueue;                                                                           
+                                                                                                                          
+                                                                                           
+    if( pxQueue->uxMessagesWaiting == ( UBaseType_t ) 0U )                                                                
+    {                                                                                                                     
+        /* There is nothing in the queue, block for the specified period. */                                              
+        vTaskPlaceOnEventListRestricted( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait, xWaitIndefinitely );         
+    }                                                                                                                     
+                                                                                           
+}                                                                                                                         

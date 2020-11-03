@@ -1,11 +1,17 @@
-cscope 15 /work_base/TROS_change -q 0000000433 0000046471
+cscope 15 /work_base/TROS_change -q 0000000463 0000051088
 	@common.c
 
 1 
 	~"comm⁄.h
 "
 
-2 
+2 
+Ba£Ty≥_t
+ 
+	gxSèπC⁄ãxt
+[31] = {0};
+
+3 
 	$mem˝y
 (* 
 des
@@ -15,31 +21,31 @@ des
 numbî
 )
 
-4 *
+5 *
 tmp
  = 
 des
 ;
 
-5 * 
+6 * 
 tmp2
  = 
 §c
 ;
 
-6 
+7 
 i
  = 0; i< 
 numbî
 ; i++)
 
-8 *
+9 *
 tmp
 ++ = *
 tmp2
 ++;
 
-10 
+11 
 	}
 }
 
@@ -416,6 +422,44 @@ UBa£Ty≥_t
  ( ( 
 UBa£Ty≥_t
  ) 0U )
+
+	)
+
+62 
+	#p‹tTASK_FUNCTION
+–
+vFun˘i⁄
+, 
+pvP¨amëîs
+ ) 
+	`vFun˘i⁄
+–*pvP¨amëî†)
+
+	)
+
+63 
+	#c⁄figTICK_RATE_HZ
+ ( ( 
+TickTy≥_t
+ ) 1000 )
+
+	)
+
+64 
+	#p‹tTICK_PERIOD_MS
+ ( ( 
+TickTy≥_t
+ ) (1000 / 
+c⁄figTICK_RATE_HZ
+Ë)
+
+	)
+
+66 
+	#tskIDLE_STACK_SIZE
+ 
+c⁄figMINIMAL_STACK_SIZE
+
 
 	)
 
@@ -1659,21 +1703,51 @@ pvOw√r
 	~"èsk.h
 "
 
-6 
+5 
+	~"time.h
+"
+
+7 
+	#maöCHECK_TIMER_PERIOD_MS
+ ( 3000UL / 
+p‹tTICK_PERIOD_MS
+ )
+
+	)
+
+8 
+	#maöDONT_BLOCK
+ ( 0UL )
+
+	)
+
+9 
 Ba£Ty≥_t
  
 	gxD©a
  = 0;
 
-7 
+10 
 Te°Progøm
 ();
 
-8 
+11 
+¥vCheckTimîCÆlback
+();
+
+12 
 	$vSysˇŒInô
 ()
 
-10 
+14 
+TimîH™dÀ_t
+ 
+xCheckTimî
+ = 
+NULL
+;
+
+16 
 	`xTaskCª©e
 –
 Te°Progøm
@@ -1681,31 +1755,57 @@ Te°Progøm
 NULL
 , 20, NULL );
 
-13 
+18 
+xCheckTimî
+ = 
+	`xTimîCª©e
+–"CheckTimî",–
+maöCHECK_TIMER_PERIOD_MS
+ ),
+pdTRUE
+,–* ) 0,
+¥vCheckTimîCÆlback
+);
+
+20 if–
+xCheckTimî
+ !
+NULL
+ )
+
+22 
+	`xTimîSèπ
+–
+xCheckTimî
+, 
+maöDONT_BLOCK
+ );
+
+26 
 	`vTaskSèπScheduÀr
 ();
 
-14 
+27 
 	}
 }
 
-16 
+29 
 	$Te°Progøm
 ()
 
-19 
+32 
 Ba£Ty≥_t
  
 a
  =1;
 
-20 
+33 
 QueueH™dÀ_t
  
 ã°queuë
 ;
 
-21 
+34 
 ã°queuë
  = 
 	`xQueueCª©e
@@ -1715,7 +1815,7 @@ bktQUEUE_LENGTH
 Ba£Ty≥_t
  ) );
 
-22 
+35 
 	`xQueueSíd
 (
 ã°queuë
@@ -1723,7 +1823,7 @@ Ba£Ty≥_t
 a
 ,0);
 
-23 if–
+36 if–
 	`xQueueRe˚ive
 –
 ã°queuë
@@ -1733,7 +1833,19 @@ xD©a
 îrQUEUE_EMPTY
  )
 
-27 
+40 
+	}
+}
+
+41 
+	$¥vCheckTimîCÆlback
+()
+
+43 
+a
+=0;
+
+44 
 	}
 }
 
@@ -3693,7 +3805,13 @@ TCB_t
 NULL
 ;
 
-30 
+30 
+TickTy≥_t
+ 
+xTaskGëTickCou¡
+( );
+
+31 
 	#¥vAddTaskToRódyLi°
 –
 pxTCB
@@ -3709,63 +3827,115 @@ xGíîicLi°Iãm
 
 	)
 
-31 
+32 
 Ba£Ty≥_t
  
 xTaskIn¸emítTick
 ( );
 
-33 
+34 
 	#èskSWITCH_DELAYED_LISTS
 () \
 
-35 
+36 
 Li°_t
  *
 pxTemp
 ; \
 
-36 
+37 
 pxTemp
  = 
 pxDñayedTaskLi°
-; \
-
-37 
-pxDñayedTaskLi°
- = 
-pxOvîÊowDñayedTaskLi°
 ; \
 
 38 
+pxDñayedTaskLi°
+ = 
+pxOvîÊowDñayedTaskLi°
+; \
+
+39 
 pxOvîÊowDñayedTaskLi°
  = 
 pxTemp
 ; \
 
-39 
+40 
 xNumOfOvîÊows
 ++; \
 
-40 
+41 
 	`¥vRe£tNextTaskUnblockTime
 (); \
 
-41 }
+42 }
 
 	)
 
-43 
+44 
+	$p‹tTASK_FUNCTION
+–
+¥vIdÀTask
+, 
+pvP¨amëîs
+ )
+
+48 if–
+	`li°CURRENT_LIST_LENGTH
+–&–
+pxRódyTasksLi°s
+[ 
+tskIDLE_PRIORITY
+ ] ) ) > ( 
+UBa£Ty≥_t
+ ) 1 )
+
+50 
+	`èskYIELD
+();
+
+53 
+	}
+}
+
+56 
+TickTy≥_t
+ 
+	$xTaskGëTickCou¡
+( )
+
+58 
+TickTy≥_t
+ 
+xTicks
+;
+
+62 
+xTicks
+ = 
+xTickCou¡
+;
+
+66  
+xTicks
+;
+
+67 
+	}
+}
+
+70 
 	$¥vRe£tNextTaskUnblockTime
 ( )
 
-45 
+72 
 TCB_t
  *
 pxTCB
 ;
 
-47 if–
+74 if–
 	`li°LIST_IS_EMPTY
 –
 pxDñayedTaskLi°
@@ -3773,13 +3943,13 @@ pxDñayedTaskLi°
 pdFALSE
  )
 
-53 
+80 
 xNextTaskUnblockTime
  = 
 p‹tMAX_DELAY
 ;
 
-61 –
+88 –
 pxTCB
  ) = ( 
 TCB_t
@@ -3789,7 +3959,7 @@ TCB_t
 pxDñayedTaskLi°
  );
 
-62 
+89 
 xNextTaskUnblockTime
  = 
 	`li°GET_LIST_ITEM_VALUE
@@ -3799,23 +3969,23 @@ pxTCB
 xGíîicLi°Iãm
  ) );
 
-64 
+91 
 	}
 }
 
-67 
+94 
 Ba£Ty≥_t
  
 	$xTaskResumeAŒ
 ( )
 
-69 
+96 
 TCB_t
  *
 pxTCB
 ;
 
-70 
+97 
 Ba£Ty≥_t
  
 xAÃódyYõlded
@@ -3823,15 +3993,15 @@ xAÃódyYõlded
 pdFALSE
 ;
 
-71 
+98 
 	`èskENTER_CRITICAL
 ();
 
-73 --
+100 --
 uxScheduÀrSu•íded
 ;
 
-75 if–
+102 if–
 uxScheduÀrSu•íded
  =–
 UBa£Ty≥_t
@@ -3839,13 +4009,13 @@ UBa£Ty≥_t
 pdFALSE
  )
 
-77 if–
+104 if–
 uxCuºítNumbîOfTasks
  > ( 
 UBa£Ty≥_t
  ) 0U )
 
-81  
+108  
 	`li°LIST_IS_EMPTY
 –&
 xPídögRódyLi°
@@ -3853,7 +4023,7 @@ xPídögRódyLi°
 pdFALSE
  )
 
-83 
+110 
 pxTCB
  = ( 
 TCB_t
@@ -3863,7 +4033,7 @@ TCB_t
 xPídögRódyLi°
  ) );
 
-84 –Ë
+111 –Ë
 	`uxLi°Remove
 –&–
 pxTCB
@@ -3871,7 +4041,7 @@ pxTCB
 xEvítLi°Iãm
  ) );
 
-85 –Ë
+112 –Ë
 	`uxLi°Remove
 –&–
 pxTCB
@@ -3879,13 +4049,13 @@ pxTCB
 xGíîicLi°Iãm
  ) );
 
-86 
+113 
 	`¥vAddTaskToRódyLi°
 –
 pxTCB
  );
 
-90 if–
+117 if–
 pxTCB
 ->
 uxPri‹ôy
@@ -3893,81 +4063,81 @@ uxPri‹ôy
 pxCuºítTCB
 ->uxPriority )
 
-92 
+119 
 xYõldPídög
  = 
 pdTRUE
 ;
 
-96 if–
+123 if–
 uxPídedTicks
  > ( 
 UBa£Ty≥_t
  ) 0U )
 
-98  
+125  
 uxPídedTicks
  > ( 
 UBa£Ty≥_t
  ) 0U )
 
-100 if–
+127 if–
 	`xTaskIn¸emítTick
 (Ë!
 pdFALSE
  )
 
-102 
+129 
 xYõldPídög
  = 
 pdTRUE
 ;
 
-104 --
+131 --
 uxPídedTicks
 ;
 
-107 if–
+134 if–
 xYõldPídög
  =
 pdTRUE
  )
 
-109 #if–
+136 #if–
 c⁄figUSE_PREEMPTION
  != 0 )
 
-111 
+138 
 xAÃódyYõlded
  = 
 pdTRUE
 ;
 
-114 
+141 
 	`èskYIELD_IF_USING_PREEMPTION
 ();
 
-121 
+148 
 	`èskEXIT_CRITICAL
 ();
 
-123  
+150  
 xAÃódyYõlded
 ;
 
-125 
+152 
 	}
 }
 
-126 
+153 
 	$¥vTaskExôEº‹
 ()
 
-129 
+156 
 	}
 }
 
-130 
+157 
 	$¥vInôüli£TCBV¨übÀs
 –
 TCB_t
@@ -3989,13 +4159,13 @@ uöt16_t
 usSèckDïth
  )
 
-132 
+159 
 UBa£Ty≥_t
  
 x
 ;
 
-134  
+161  
 x
  = ( 
 UBa£Ty≥_t
@@ -4003,7 +4173,7 @@ UBa£Ty≥_t
 c⁄figMAX_TASK_NAME_LEN
 ; x++ )
 
-136 
+163 
 pxTCB
 ->
 pcTaskName
@@ -4013,13 +4183,13 @@ x
 pcName
 [ x ];
 
-138 if–
+165 if–
 pcName
 [ 
 x
  ] == 0x00 )
 
-144 
+171 
 pxTCB
 ->
 pcTaskName
@@ -4027,7 +4197,7 @@ pcTaskName
 c⁄figMAX_TASK_NAME_LEN
  - 1 ] = '\0';
 
-146 if–
+173 if–
 uxPri‹ôy
  >–
 UBa£Ty≥_t
@@ -4035,7 +4205,7 @@ UBa£Ty≥_t
 c⁄figMAX_PRIORITIES
  )
 
-148 
+175 
 uxPri‹ôy
  = ( 
 UBa£Ty≥_t
@@ -4043,17 +4213,17 @@ UBa£Ty≥_t
 c⁄figMAX_PRIORITIES
  - ( UBaseType_t ) 1U;
 
-151 
+178 
 pxTCB
 ->
 uxPri‹ôy
  = uxPriority;
 
-152 #i‡–
+179 #i‡–
 c⁄figUSE_MUTEXES
  == 1 )
 
-154 
+181 
 pxTCB
 ->
 uxBa£Pri‹ôy
@@ -4061,13 +4231,13 @@ uxBa£Pri‹ôy
 uxPri‹ôy
 ;
 
-155 
+182 
 pxTCB
 ->
 uxMuãxesHñd
  = 0;
 
-159 
+186 
 	`vLi°Inôüli£Iãm
 –&–
 pxTCB
@@ -4075,7 +4245,7 @@ pxTCB
 xGíîicLi°Iãm
  ) );
 
-160 
+187 
 	`vLi°Inôüli£Iãm
 –&–
 pxTCB
@@ -4083,7 +4253,7 @@ pxTCB
 xEvítLi°Iãm
  ) );
 
-162 
+189 
 	`li°SET_LIST_ITEM_OWNER
 –&–
 pxTCB
@@ -4091,7 +4261,7 @@ pxTCB
 xGíîicLi°Iãm
  ),ÖxTCB );
 
-164 
+191 
 	`li°SET_LIST_ITEM_VALUE
 –&–
 pxTCB
@@ -4105,7 +4275,7 @@ c⁄figMAX_PRIORITIES
 uxPri‹ôy
  );
 
-165 
+192 
 	`li°SET_LIST_ITEM_OWNER
 –&–
 pxTCB
@@ -4113,11 +4283,11 @@ pxTCB
 xEvítLi°Iãm
  ),ÖxTCB );
 
-167 #i‡–
+194 #i‡–
 p‹tCRITICAL_NESTING_IN_TCB
  == 1 )
 
-169 
+196 
 pxTCB
 ->
 uxCrôiˇlNe°ög
@@ -4125,11 +4295,11 @@ uxCrôiˇlNe°ög
 UBa£Ty≥_t
  ) 0U;
 
-173 #i‡–
+200 #i‡–
 c⁄figUSE_APPLICATION_TASK_TAG
  == 1 )
 
-175 
+202 
 pxTCB
 ->
 pxTaskTag
@@ -4137,21 +4307,21 @@ pxTaskTag
 NULL
 ;
 
-179 #i‡–
+206 #i‡–
 c⁄figGENERATE_RUN_TIME_STATS
  == 1 )
 
-181 
+208 
 pxTCB
 ->
 ulRunTimeCou¡î
  = 0UL;
 
-185 #i‡–
+212 #i‡–
 p‹tUSING_MPU_WRAPPERS
  == 1 )
 
-187 
+214 
 	`vP‹tSt‹eTaskMPUSëtögs
 –&–
 pxTCB
@@ -4165,19 +4335,19 @@ pxSèck
 usSèckDïth
  );
 
-191 –Ë
+218 –Ë
 xRegi⁄s
 ;
 
-192 –Ë
+219 –Ë
 usSèckDïth
 ;
 
-196 #if–
+223 #if–
 c⁄figNUM_THREAD_LOCAL_STORAGE_POINTERS
  != 0 )
 
-198  
+225  
 x
  = 0; x < ( 
 UBa£Ty≥_t
@@ -4185,7 +4355,7 @@ UBa£Ty≥_t
 c⁄figNUM_THREAD_LOCAL_STORAGE_POINTERS
 ; x++ )
 
-200 
+227 
 pxTCB
 ->
 pvThªadLoˇlSt‹agePoöãrs
@@ -4195,17 +4365,17 @@ x
 NULL
 ;
 
-205 #i‡–
+232 #i‡–
 c⁄figUSE_TASK_NOTIFICATIONS
  == 1 )
 
-207 
+234 
 pxTCB
 ->
 ulNŸifõdVÆue
  = 0;
 
-208 
+235 
 pxTCB
 ->
 eNŸifySèã
@@ -4213,11 +4383,11 @@ eNŸifySèã
 eNŸWaôögNŸifiˇti⁄
 ;
 
-212 #i‡–
+239 #i‡–
 c⁄figUSE_NEWLIB_REENTRANT
  == 1 )
 
-215 
+242 
 	`_REENT_INIT_PTR
 ––&–
 pxTCB
@@ -4225,11 +4395,11 @@ pxTCB
 xNewLib_ªít
  ) ) );
 
-218 
+245 
 	}
 }
 
-219 
+246 
 SèckTy≥_t
  *
 	$pxP‹tInôüli£Sèck
@@ -4245,17 +4415,17 @@ pxCode
 pvP¨amëîs
  )
 
-223 *
+250 *
 ç
  
 	`asm
 ("x3");
 
-224 
+251 
 pxT›OfSèck
 --;
 
-225 *
+252 *
 pxT›OfSèck
  = (
 p‹tSTACK_TYPE
@@ -4263,11 +4433,11 @@ p‹tSTACK_TYPE
 pxCode
 ;
 
-226 
+253 
 pxT›OfSèck
  -= 22;
 
-227 *
+254 *
 pxT›OfSèck
  = (
 p‹tSTACK_TYPE
@@ -4275,11 +4445,11 @@ p‹tSTACK_TYPE
 pvP¨amëîs
 ;
 
-228 
+255 
 pxT›OfSèck
  -= 6;
 
-229 *
+256 *
 pxT›OfSèck
  = (
 p‹tSTACK_TYPE
@@ -4287,11 +4457,11 @@ p‹tSTACK_TYPE
 ç
 ;
 
-230 
+257 
 pxT›OfSèck
  -= 3;
 
-231 *
+258 *
 pxT›OfSèck
  = (
 p‹tSTACK_TYPE
@@ -4299,19 +4469,19 @@ p‹tSTACK_TYPE
 ¥vTaskExôEº‹
 ;
 
-233  
+260  
 pxT›OfSèck
 ;
 
-234 
+261 
 	}
 }
 
-236 
+263 
 	#èskSELECT_HIGHEST_PRIORITY_TASK
 () \
 
-238  
+265  
 	`li°LIST_IS_EMPTY
 –&–
 pxRódyTasksLi°s
@@ -4319,11 +4489,11 @@ pxRódyTasksLi°s
 uxT›RódyPri‹ôy
  ] ) ) ) \
 
-240 --
+267 --
 uxT›RódyPri‹ôy
 ; \
 
-242 
+269 
 	`li°GET_OWNER_OF_NEXT_ENTRY
 –
 pxCuºítTCB
@@ -4333,11 +4503,11 @@ pxRódyTasksLi°s
 uxT›RódyPri‹ôy
  ] ) ); \
 
-243 }
+270 }
 
 	)
 
-247 
+274 
 TCB_t
  *
 	$¥vAŒoˇãTCBAndSèck
@@ -4351,17 +4521,17 @@ SèckTy≥_t
 puxSèckBuf„r
  )
 
-249 
+276 
 TCB_t
  *
 pxNewTCB
 ;
 
-251 #if–
+278 #if–
 p‹tSTACK_GROWTH
  > 0 )
 
-253 
+280 
 pxNewTCB
  = ( 
 TCB_t
@@ -4369,13 +4539,13 @@ TCB_t
 	`pvP‹tMÆloc
 ( ( TCB_t ) );
 
-255 if–
+282 if–
 pxNewTCB
  !
 NULL
  )
 
-257 
+284 
 pxNewTCB
 ->
 pxSèck
@@ -4391,7 +4561,7 @@ usSèckDïth
 puxSèckBuf„r
  );
 
-259 if–
+286 if–
 pxNewTCB
 ->
 pxSèck
@@ -4399,25 +4569,25 @@ pxSèck
 NULL
  )
 
-261 
+288 
 	`vP‹tFªe
 –
 pxNewTCB
  );
 
-262 
+289 
 pxNewTCB
  = 
 NULL
 ;
 
-268 
+295 
 SèckTy≥_t
  *
 pxSèck
 ;
 
-270 
+297 
 pxSèck
  = ( 
 SèckTy≥_t
@@ -4431,13 +4601,13 @@ usSèckDïth
 puxSèckBuf„r
  );
 
-272 if–
+299 if–
 pxSèck
  !
 NULL
  )
 
-274 
+301 
 pxNewTCB
  = ( 
 TCB_t
@@ -4445,37 +4615,37 @@ TCB_t
 	`pvP‹tMÆloc
 ( ( TCB_t ) );
 
-276 if–
+303 if–
 pxNewTCB
  !
 NULL
  )
 
-278 
+305 
 pxNewTCB
 ->
 pxSèck
  =ÖxStack;
 
-282 
+309 
 	`vP‹tFªe
 –
 pxSèck
  );
 
-287 
+314 
 pxNewTCB
  = 
 NULL
 ;
 
-292 if–
+319 if–
 pxNewTCB
  !
 NULL
  )
 
-294 #if––
+321 #if––
 c⁄figCHECK_FOR_STACK_OVERFLOW
  > 1 ) || ( 
 c⁄figUSE_TRACE_FACILITY
@@ -4483,7 +4653,7 @@ c⁄figUSE_TRACE_FACILITY
 INCLUDE_uxTaskGëSèckHighW©îM¨k
  == 1 ) )
 
-296 –Ë
+323 –Ë
 	`mem£t
 –
 pxNewTCB
@@ -4499,15 +4669,15 @@ usSèckDïth
 SèckTy≥_t
  ) );
 
-301  
+328  
 pxNewTCB
 ;
 
-302 
+329 
 	}
 }
 
-307 
+334 
 Ba£Ty≥_t
  
 	$xTaskGíîicCª©e
@@ -4523,7 +4693,7 @@ uöt16_t
 usSèckDïth
 ,
 
-308 * c⁄° 
+335 * c⁄° 
 pvP¨amëîs
 , 
 UBa£Ty≥_t
@@ -4543,25 +4713,25 @@ Mem‹yRegi⁄_t
 xRegi⁄s
  )
 
-310 
+337 
 Ba£Ty≥_t
  
 xRëu∫
 ;
 
-311 
+338 
 TCB_t
  * 
 pxNewTCB
 ;
 
-312 
+339 
 SèckTy≥_t
  *
 pxT›OfSèck
 ;
 
-316 
+343 
 pxNewTCB
  = 
 	`¥vAŒoˇãTCBAndSèck
@@ -4571,53 +4741,53 @@ usSèckDïth
 puxSèckBuf„r
  );
 
-317 if–
+344 if–
 pxNewTCB
  !
 NULL
  )
 
-319 #if–
+346 #if–
 p‹tUSING_MPU_WRAPPERS
  == 1 )
 
-320 
+347 
 Ba£Ty≥_t
  
 xRunPrivûeged
 ;
 
-321 if––
+348 if––
 uxPri‹ôy
  & 
 p‹tPRIVILEGE_BIT
  ) != 0U )
 
-323 
+350 
 xRunPrivûeged
  = 
 pdTRUE
 ;
 
-327 
+354 
 xRunPrivûeged
  = 
 pdFALSE
 ;
 
-329 
+356 
 uxPri‹ôy
  &~
 p‹tPRIVILEGE_BIT
 ;
 
-331 if–
+358 if–
 puxSèckBuf„r
  !
 NULL
  )
 
-333 
+360 
 pxNewTCB
 ->
 xUsögSètiˇŒyAŒoˇãdSèck
@@ -4625,7 +4795,7 @@ xUsögSètiˇŒyAŒoˇãdSèck
 pdTRUE
 ;
 
-337 
+364 
 pxNewTCB
 ->
 xUsögSètiˇŒyAŒoˇãdSèck
@@ -4633,11 +4803,11 @@ xUsögSètiˇŒyAŒoˇãdSèck
 pdFALSE
 ;
 
-341 #if–
+368 #if–
 p‹tSTACK_GROWTH
  < 0 )
 
-343 
+370 
 pxT›OfSèck
  = 
 pxNewTCB
@@ -4649,7 +4819,7 @@ usSèckDïth
 uöt16_t
  ) 1 );
 
-344 
+371 
 pxT›OfSèck
  = ( 
 SèckTy≥_t
@@ -4659,7 +4829,7 @@ p‹tPOINTER_SIZE_TYPE
 p‹tBYTE_ALIGNMENT_MASK
  ) ) );
 
-349 
+376 
 pxT›OfSèck
  = 
 pxNewTCB
@@ -4667,7 +4837,7 @@ pxNewTCB
 pxSèck
 ;
 
-351 
+378 
 pxNewTCB
 ->
 pxEndOfSèck
@@ -4677,7 +4847,7 @@ pxSèck
 usSèckDïth
  - 1 );
 
-355 
+382 
 	`¥vInôüli£TCBV¨übÀs
 –
 pxNewTCB
@@ -4691,11 +4861,11 @@ xRegi⁄s
 usSèckDïth
  );
 
-357 #if–
+384 #if–
 p‹tUSING_MPU_WRAPPERS
  == 1 )
 
-359 
+386 
 pxNewTCB
 ->
 pxT›OfSèck
@@ -4709,7 +4879,7 @@ pvP¨amëîs
 xRunPrivûeged
  );
 
-363 
+390 
 pxNewTCB
 ->
 pxT›OfSèck
@@ -4721,13 +4891,13 @@ pxTaskCode
 pvP¨amëîs
  );
 
-367 if––* ) 
+394 if––* ) 
 pxCª©edTask
  !
 NULL
  )
 
-369 *
+396 *
 pxCª©edTask
  = ( 
 TaskH™dÀ_t
@@ -4735,63 +4905,63 @@ TaskH™dÀ_t
 pxNewTCB
 ;
 
-372 
+399 
 	`èskENTER_CRITICAL
 ();
 
-374 
+401 
 uxCuºítNumbîOfTasks
 ++;
 
-375 if–
+402 if–
 pxCuºítTCB
  =
 NULL
  )
 
-377 
+404 
 pxCuºítTCB
  = 
 pxNewTCB
 ;
 
-379 if–
+406 if–
 uxCuºítNumbîOfTasks
  =–
 UBa£Ty≥_t
  ) 1 )
 
-381 
+408 
 	`¥vInôüli£TaskLi°s
 ();
 
-389 if–
+416 if–
 xScheduÀrRu¬ög
  =
 pdFALSE
  )
 
-391 if–
+418 if–
 pxCuºítTCB
 ->
 uxPri‹ôy
  <= uxPriority )
 
-393 
+420 
 pxCuºítTCB
  = 
 pxNewTCB
 ;
 
-398 
+425 
 uxTaskNumbî
 ++;
 
-400 #i‡–
+427 #i‡–
 c⁄figUSE_TRACE_FACILITY
  == 1 )
 
-403 
+430 
 pxNewTCB
 ->
 uxTCBNumbî
@@ -4799,61 +4969,57 @@ uxTCBNumbî
 uxTaskNumbî
 ;
 
-407 
+434 
 	`¥vAddTaskToRódyLi°
 (
 pxNewTCB
 );
 
-409 
+436 
 xRëu∫
  = 
 pdPASS
 ;
 
-411 
+438 
 	`èskEXIT_CRITICAL
 ();
 
-415 
+442 
 xRëu∫
  = 
 îrCOULD_NOT_ALLOCATE_REQUIRED_MEMORY
 ;
 
-418 if–
+445 if–
 xRëu∫
  =
 pdPASS
  )
 
-420 
-	`SëRu¬ög
-();
-
-421 if–
+447 if–
 xScheduÀrRu¬ög
  !
 pdFALSE
  )
 
-427 
+453 
 	`èskYIELD_IF_USING_PREEMPTION
 ();
 
-432  
+458  
 xRëu∫
 ;
 
-433 
+459 
 	}
 }
 
-437 
+463 
 	$vTaskSwôchC⁄ãxt
 ( )
 
-439 if–
+465 if–
 uxScheduÀrSu•íded
  !–
 UBa£Ty≥_t
@@ -4861,45 +5027,45 @@ UBa£Ty≥_t
 pdFALSE
  )
 
-441 
+467 
 xYõldPídög
  = 
 pdTRUE
 ;
 
-445 
+471 
 xYõldPídög
  = 
 pdFALSE
 ;
 
-447 #i‡–
+473 #i‡–
 c⁄figGENERATE_RUN_TIME_STATS
  == 1 )
 
-449 #ifde‡
+475 #ifde‡
 p‹tALT_GET_RUN_TIME_COUNTER_VALUE
 
 
-450 
+476 
 	`p‹tALT_GET_RUN_TIME_COUNTER_VALUE
 –
 ulTŸÆRunTime
  );
 
-452 
+478 
 ulTŸÆRunTime
  = 
 	`p‹tGET_RUN_TIME_COUNTER_VALUE
 ();
 
-455 if–
+481 if–
 ulTŸÆRunTime
  > 
 ulTaskSwôchedInTime
  )
 
-457 
+483 
 pxCuºítTCB
 ->
 ulRunTimeCou¡î
@@ -4909,25 +5075,25 @@ ulTŸÆRunTime
 ulTaskSwôchedInTime
  );
 
-459 
+485 
 ulTaskSwôchedInTime
  = 
 ulTŸÆRunTime
 ;
 
-464 
+490 
 	`èskCHECK_FOR_STACK_OVERFLOW
 ();
 
-468 
+494 
 	`èskSELECT_HIGHEST_PRIORITY_TASK
 ();
 
-471 #i‡–
+497 #i‡–
 c⁄figUSE_NEWLIB_REENTRANT
  == 1 )
 
-475 
+501 
 _impuª_±r
  = &–
 pxCuºítTCB
@@ -4935,11 +5101,11 @@ pxCuºítTCB
 xNewLib_ªít
  );
 
-479 
+505 
 	}
 }
 
-481 
+507 
 Ba£Ty≥_t
  
 	$xTaskRemoveFromEvítLi°
@@ -4949,19 +5115,19 @@ Li°_t
 pxEvítLi°
  )
 
-483 
+509 
 TCB_t
  *
 pxUnblockedTCB
 ;
 
-484 
+510 
 Ba£Ty≥_t
  
 xRëu∫
 ;
 
-485 
+511 
 pxUnblockedTCB
  = ( 
 TCB_t
@@ -4971,7 +5137,7 @@ TCB_t
 pxEvítLi°
  );
 
-486 –Ë
+512 –Ë
 	`uxLi°Remove
 –&–
 pxUnblockedTCB
@@ -4979,7 +5145,7 @@ pxUnblockedTCB
 xEvítLi°Iãm
  ) );
 
-488 if–
+514 if–
 uxScheduÀrSu•íded
  =–
 UBa£Ty≥_t
@@ -4987,7 +5153,7 @@ UBa£Ty≥_t
 pdFALSE
  )
 
-490 –Ë
+516 –Ë
 	`uxLi°Remove
 –&–
 pxUnblockedTCB
@@ -4995,13 +5161,13 @@ pxUnblockedTCB
 xGíîicLi°Iãm
  ) );
 
-491 
+517 
 	`¥vAddTaskToRódyLi°
 –
 pxUnblockedTCB
  );
 
-498 
+524 
 	`vLi°In£πEnd
 –&–
 xPídögRódyLi°
@@ -5011,7 +5177,7 @@ pxUnblockedTCB
 xEvítLi°Iãm
  ) );
 
-500 if–
+526 if–
 pxUnblockedTCB
 ->
 uxPri‹ôy
@@ -5019,57 +5185,57 @@ uxPri‹ôy
 pxCuºítTCB
 ->uxPriority )
 
-505 
+531 
 xRëu∫
  = 
 pdTRUE
 ;
 
-509 
+535 
 xYõldPídög
  = 
 pdTRUE
 ;
 
-513 
+539 
 xRëu∫
  = 
 pdFALSE
 ;
 
-515  
+541  
 xRëu∫
 ;
 
-516 
+542 
 	}
 }
 
-518 
+544 
 Ba£Ty≥_t
  
 	$xTaskGëScheduÀrSèã
 ( )
 
-520 
+546 
 Ba£Ty≥_t
  
 xRëu∫
 ;
 
-522 if–
+548 if–
 xScheduÀrRu¬ög
  =
 pdFALSE
  )
 
-524 
+550 
 xRëu∫
  = 
 èskSCHEDULER_NOT_STARTED
 ;
 
-528 if–
+554 if–
 uxScheduÀrSu•íded
  =–
 UBa£Ty≥_t
@@ -5077,137 +5243,105 @@ UBa£Ty≥_t
 pdFALSE
  )
 
-530 
+556 
 xRëu∫
  = 
 èskSCHEDULER_RUNNING
 ;
 
-534 
+560 
 xRëu∫
  = 
 èskSCHEDULER_SUSPENDED
 ;
 
-538  
+564  
 xRëu∫
 ;
 
-539 
+565 
 	}
 }
 
-540 
-	$vTaskSèπScheduÀr
-( )
-
-542 
-Ba£Ty≥_t
- 
-xRëu∫
-;
-
-543 if–
-xRëu∫
- =
-pdPASS
- )
-
-545 
-xRëu∫
- = 
-	`xTimîCª©eTimîTask
-();
-
-547 if–
-	`xP‹tSèπScheduÀr
-(Ë!
-pdFALSE
- )
-
-553 
-	}
-}
-
-555 
+568 
 	$vTaskSu•ídAŒ
 ( )
 
-557 ++
+570 ++
 uxScheduÀrSu•íded
 ;
 
-558 
+571 
 	}
 }
 
-559 
+572 
 	$vTaskE¡îCrôiˇl
 ( )
 
-561 
+574 
 	`p‹tDISABLE_INTERRUPTS
 ();
 
-563 if–
+576 if–
 xScheduÀrRu¬ög
  !
 pdFALSE
  )
 
-565 –
+578 –
 pxCuºítTCB
 ->
 uxCrôiˇlNe°ög
  )++;
 
-573 if–
+586 if–
 pxCuºítTCB
 ->
 uxCrôiˇlNe°ög
  == 1 )
 
-582 
+595 
 	}
 }
 
-583 
+596 
 	$vTaskExôCrôiˇl
 ( )
 
-585 if–
+598 if–
 xScheduÀrRu¬ög
  !
 pdFALSE
  )
 
-587 if–
+600 if–
 pxCuºítTCB
 ->
 uxCrôiˇlNe°ög
  > 0U )
 
-589 –
+602 –
 pxCuºítTCB
 ->
 uxCrôiˇlNe°ög
  )--;
 
-591 if–
+604 if–
 pxCuºítTCB
 ->
 uxCrôiˇlNe°ög
  == 0U )
 
-593 
+606 
 	`p‹tENABLE_INTERRUPTS
 ();
 
-598 
+611 
 	}
 }
 
-599 
+612 
 	$vTaskSëTimeOutSèã
 –
 TimeOut_t
@@ -5215,7 +5349,7 @@ TimeOut_t
 pxTimeOut
  )
 
-601 
+614 
 pxTimeOut
 ->
 xOvîÊowCou¡
@@ -5223,7 +5357,7 @@ xOvîÊowCou¡
 xNumOfOvîÊows
 ;
 
-602 
+615 
 pxTimeOut
 ->
 xTimeOnE¡îög
@@ -5231,11 +5365,11 @@ xTimeOnE¡îög
 xTickCou¡
 ;
 
-603 
+616 
 	}
 }
 
-605 
+618 
 Ba£Ty≥_t
  
 	$xTaskCheckF‹TimeOut
@@ -5249,13 +5383,13 @@ TickTy≥_t
 pxTicksToWaô
  )
 
-607 
+620 
 Ba£Ty≥_t
  
 xRëu∫
 ;
 
-608 c⁄° 
+621 c⁄° 
 TickTy≥_t
  
 xC⁄°TickCou¡
@@ -5263,19 +5397,19 @@ xC⁄°TickCou¡
 xTickCou¡
 ;
 
-609 if–*
+622 if–*
 pxTicksToWaô
  =
 p‹tMAX_DELAY
  )
 
-611 
+624 
 xRëu∫
  = 
 pdFALSE
 ;
 
-613 if––
+626 if––
 xNumOfOvîÊows
  !
 pxTimeOut
@@ -5287,13 +5421,13 @@ xC⁄°TickCou¡
 xTimeOnE¡îög
  ) )
 
-615 
+628 
 xRëu∫
  = 
 pdTRUE
 ;
 
-617 if––
+630 if––
 xC⁄°TickCou¡
  - 
 pxTimeOut
@@ -5303,7 +5437,7 @@ xTimeOnE¡îög
 pxTicksToWaô
  )
 
-620 *
+633 *
 pxTicksToWaô
  -–
 xC⁄°TickCou¡
@@ -5313,33 +5447,33 @@ pxTimeOut
 xTimeOnE¡îög
  );
 
-621 
+634 
 	`vTaskSëTimeOutSèã
 –
 pxTimeOut
  );
 
-622 
+635 
 xRëu∫
  = 
 pdFALSE
 ;
 
-626 
+639 
 xRëu∫
  = 
 pdTRUE
 ;
 
-628  
+641  
 xRëu∫
 ;
 
-629 
+642 
 	}
 }
 
-630 
+643 
 	$¥vAddCuºítTaskToDñayedLi°
 –c⁄° 
 TickTy≥_t
@@ -5347,7 +5481,7 @@ TickTy≥_t
 xTimeToWake
  )
 
-633 
+646 
 	`li°SET_LIST_ITEM_VALUE
 –&–
 pxCuºítTCB
@@ -5357,13 +5491,13 @@ xGíîicLi°Iãm
 xTimeToWake
  );
 
-635 if–
+648 if–
 xTimeToWake
  < 
 xTickCou¡
  )
 
-638 
+651 
 	`vLi°In£π
 –
 pxOvîÊowDñayedTaskLi°
@@ -5373,7 +5507,7 @@ pxCuºítTCB
 xGíîicLi°Iãm
  ) );
 
-643 
+656 
 	`vLi°In£π
 –
 pxDñayedTaskLi°
@@ -5383,23 +5517,23 @@ pxCuºítTCB
 xGíîicLi°Iãm
  ) );
 
-648 if–
+661 if–
 xTimeToWake
  < 
 xNextTaskUnblockTime
  )
 
-650 
+663 
 xNextTaskUnblockTime
  = 
 xTimeToWake
 ;
 
-653 
+666 
 	}
 }
 
-655 
+668 
 	$vTaskPœ˚OnEvítLi°
 –
 Li°_t
@@ -5411,13 +5545,13 @@ TickTy≥_t
 xTicksToWaô
  )
 
-657 
+670 
 TickTy≥_t
  
 xTimeToWake
 ;
 
-658 
+671 
 	`vLi°In£π
 –
 pxEvítLi°
@@ -5427,7 +5561,7 @@ pxCuºítTCB
 xEvítLi°Iãm
  ) );
 
-659 if–
+672 if–
 	`uxLi°Remove
 –&–
 pxCuºítTCB
@@ -5437,13 +5571,13 @@ xGíîicLi°Iãm
 UBa£Ty≥_t
  ) 0 )
 
-664 if–
+677 if–
 xTicksToWaô
  =
 p‹tMAX_DELAY
  )
 
-669 
+682 
 	`vLi°In£πEnd
 –&
 xSu•ídedTaskLi°
@@ -5453,7 +5587,7 @@ pxCuºítTCB
 xGíîicLi°Iãm
  ) );
 
-676 
+689 
 xTimeToWake
  = 
 xTickCou¡
@@ -5461,35 +5595,35 @@ xTickCou¡
 xTicksToWaô
 ;
 
-677 
+690 
 	`¥vAddCuºítTaskToDñayedLi°
 –
 xTimeToWake
  );
 
-680 
+693 
 	}
 }
 
-683 
+696 
 Ba£Ty≥_t
  
 	$xTaskIn¸emítTick
 ( )
 
-685 
+698 
 TCB_t
  * 
 pxTCB
 ;
 
-686 
+699 
 TickTy≥_t
  
 xIãmVÆue
 ;
 
-687 
+700 
 Ba£Ty≥_t
  
 xSwôchRequúed
@@ -5497,7 +5631,7 @@ xSwôchRequúed
 pdFALSE
 ;
 
-688 if–
+701 if–
 uxScheduÀrSu•íded
  =–
 UBa£Ty≥_t
@@ -5505,11 +5639,11 @@ UBa£Ty≥_t
 pdFALSE
  )
 
-690 ++
+703 ++
 xTickCou¡
 ;
 
-693 c⁄° 
+706 c⁄° 
 TickTy≥_t
  
 xC⁄°TickCou¡
@@ -5517,23 +5651,23 @@ xC⁄°TickCou¡
 xTickCou¡
 ;
 
-695 if–
+708 if–
 xC⁄°TickCou¡
  =–
 TickTy≥_t
  ) 0U )
 
-697 
+710 
 	`èskSWITCH_DELAYED_LISTS
 ();
 
-699 if–
+712 if–
 xC⁄°TickCou¡
  >
 xNextTaskUnblockTime
  )
 
-703 if–
+716 if–
 	`li°LIST_IS_EMPTY
 –
 pxDñayedTaskLi°
@@ -5541,13 +5675,13 @@ pxDñayedTaskLi°
 pdFALSE
  )
 
-705 
+718 
 xNextTaskUnblockTime
  = 
 p‹tMAX_DELAY
 ;
 
-711 
+724 
 pxTCB
  = ( 
 TCB_t
@@ -5557,7 +5691,7 @@ TCB_t
 pxDñayedTaskLi°
  );
 
-712 
+725 
 xIãmVÆue
  = 
 	`li°GET_LIST_ITEM_VALUE
@@ -5567,19 +5701,19 @@ pxTCB
 xGíîicLi°Iãm
  ) );
 
-714 if–
+727 if–
 xC⁄°TickCou¡
  < 
 xIãmVÆue
  )
 
-716 
+729 
 xNextTaskUnblockTime
  = 
 xIãmVÆue
 ;
 
-719 –Ë
+732 –Ë
 	`uxLi°Remove
 –&–
 pxTCB
@@ -5587,7 +5721,7 @@ pxTCB
 xGíîicLi°Iãm
  ) );
 
-723 if–
+736 if–
 	`li°LIST_ITEM_CONTAINER
 –&–
 pxTCB
@@ -5597,7 +5731,7 @@ xEvítLi°Iãm
 NULL
  )
 
-725 –Ë
+738 –Ë
 	`uxLi°Remove
 –&–
 pxTCB
@@ -5605,13 +5739,13 @@ pxTCB
 xEvítLi°Iãm
  ) );
 
-734 
+747 
 	`¥vAddTaskToRódyLi°
 –
 pxTCB
  );
 
-743 if–
+756 if–
 pxTCB
 ->
 uxPri‹ôy
@@ -5619,13 +5753,13 @@ uxPri‹ôy
 pxCuºítTCB
 ->uxPriority )
 
-745 
+758 
 xSwôchRequúed
  = 
 pdTRUE
 ;
 
-758 if–
+771 if–
 	`li°CURRENT_LIST_LENGTH
 –&–
 pxRódyTasksLi°s
@@ -5637,47 +5771,47 @@ uxPri‹ôy
 UBa£Ty≥_t
  ) 1 )
 
-760 
+773 
 xSwôchRequúed
  = 
 pdTRUE
 ;
 
-766 ++
+779 ++
 uxPídedTicks
 ;
 
-767 if–
+780 if–
 xYõldPídög
  !
 pdFALSE
  )
 
-769 
+782 
 xSwôchRequúed
  = 
 pdTRUE
 ;
 
-773  
+786  
 xSwôchRequúed
 ;
 
-774 
+787 
 	}
 }
 
-775 
+788 
 	$¥vInôüli£TaskLi°s
 ( )
 
-777 
+790 
 UBa£Ty≥_t
  
 uxPri‹ôy
 ;
 
-779  
+792  
 uxPri‹ôy
  = ( 
 UBa£Ty≥_t
@@ -5685,7 +5819,7 @@ UBa£Ty≥_t
 c⁄figMAX_PRIORITIES
 ; uxPriority++ )
 
-781 
+794 
 	`vLi°Inôüli£
 –&–
 pxRódyTasksLi°s
@@ -5693,83 +5827,83 @@ pxRódyTasksLi°s
 uxPri‹ôy
  ] ) );
 
-784 
+797 
 	`vLi°Inôüli£
 –&
 xDñayedTaskLi°1
  );
 
-785 
+798 
 	`vLi°Inôüli£
 –&
 xDñayedTaskLi°2
  );
 
-786 
+799 
 	`vLi°Inôüli£
 –&
 xPídögRódyLi°
  );
 
-788 #i‡–
+801 #i‡–
 INCLUDE_vTaskDñëe
  == 1 )
 
-790 
+803 
 	`vLi°Inôüli£
 –&
 xTasksWaôögTîmö©i⁄
  );
 
-794 #i‡–
+807 #i‡–
 INCLUDE_vTaskSu•íd
  == 1 )
 
-796 
+809 
 	`vLi°Inôüli£
 –&
 xSu•ídedTaskLi°
  );
 
-802 
+815 
 pxDñayedTaskLi°
  = &
 xDñayedTaskLi°1
 ;
 
-803 
+816 
 pxOvîÊowDñayedTaskLi°
  = &
 xDñayedTaskLi°2
 ;
 
-804 
+817 
 	}
 }
 
-805 
+818 
 	$SëRu¬ög
 ()
 
-807 
+820 
 xScheduÀrRu¬ög
 ++;
 
-809 
+822 
 	}
 }
 
-812 
+825 
 	$vTaskSèπScheduÀr
 ( )
 
-814 
+827 
 Ba£Ty≥_t
  
 xRëu∫
 ;
 
-815 
+828 
 xRëu∫
  = 
 	`xTaskCª©e
@@ -5785,53 +5919,53 @@ tskIDLE_PRIORITY
 p‹tPRIVILEGE_BIT
  ), NULL );
 
-816 if–
+829 if–
 xRëu∫
  =
 pdPASS
  )
 
-818 
+831 
 xRëu∫
  = 
 	`xTimîCª©eTimîTask
 ();
 
-820 if–
+833 if–
 xRëu∫
  =
 pdPASS
  )
 
-822 
+835 
 	`p‹tDISABLE_INTERRUPTS
 ();
 
-823 
+836 
 xNextTaskUnblockTime
  = 
 p‹tMAX_DELAY
 ;
 
-824 
+837 
 xScheduÀrRu¬ög
  = 
 pdTRUE
 ;
 
-825 
+838 
 xTickCou¡
  = ( 
 TickTy≥_t
  ) 0U;
 
-826 if–
+839 if–
 	`xP‹tSèπScheduÀr
 (Ë!
 pdFALSE
  )
 
-835 } 
+849 
 	}
 }
 
@@ -5973,181 +6107,201 @@ Ba£Ty≥_t
 
 	)
 
-26 
+25 
+vP‹tYõld
+( );
+
+26 
+	#p‹tYIELD
+(Ë
+	`vP‹tYõld
+()
+
+	)
+
+28 
+	#èskYIELD
+(Ë
+	`p‹tYIELD
+()
+
+	)
+
+30 
 	stskTaskC⁄åﬁBlock
 
 
-28 vﬁ©ûê
+32 vﬁ©ûê
 SèckTy≥_t
  *
 	mpxT›OfSèck
 ;
 
-30 #i‡–
+34 #i‡–
 p‹tUSING_MPU_WRAPPERS
  == 1 )
 
-31 
+35 
 xMPU_SETTINGS
  
 	mxMPUSëtögs
 ;
 
-32 
+36 
 Ba£Ty≥_t
  
 	mxUsögSètiˇŒyAŒoˇãdSèck
 ;
 
-35 
+39 
 Li°Iãm_t
  
 	mxGíîicLi°Iãm
 ;
 
-36 
+40 
 Li°Iãm_t
  
 	mxEvítLi°Iãm
 ;
 
-37 
+41 
 UBa£Ty≥_t
  
 	muxPri‹ôy
 ;
 
-38 
+42 
 SèckTy≥_t
  *
 	mpxSèck
 ;
 
-39 
+43 
 	mpcTaskName
 [ 
 c⁄figMAX_TASK_NAME_LEN
  ];
 
-41 
+45 
 SèckTy≥_t
  *
 	mpxEndOfSèck
 ;
 
-44 #i‡–
-p‹tCRITICAL_NESTING_IN_TCB
- == 1 )
-
-45 
-UBa£Ty≥_t
- 
-	muxCrôiˇlNe°ög
-;
-
 48 #i‡–
-c⁄figUSE_TRACE_FACILITY
+p‹tCRITICAL_NESTING_IN_TCB
  == 1 )
 
 49 
 UBa£Ty≥_t
  
+	muxCrôiˇlNe°ög
+;
+
+52 #i‡–
+c⁄figUSE_TRACE_FACILITY
+ == 1 )
+
+53 
+UBa£Ty≥_t
+ 
 	muxTCBNumbî
 ;
 
-50 
+54 
 UBa£Ty≥_t
  
 	muxTaskNumbî
 ;
 
-53 #i‡–
+57 #i‡–
 c⁄figUSE_MUTEXES
  == 1 )
 
-54 
+58 
 UBa£Ty≥_t
  
 	muxBa£Pri‹ôy
 ;
 
-55 
+59 
 UBa£Ty≥_t
  
 	muxMuãxesHñd
 ;
 
-58 #i‡–
+62 #i‡–
 c⁄figUSE_APPLICATION_TASK_TAG
  == 1 )
 
-59 
+63 
 TaskHookFun˘i⁄_t
  
 	mpxTaskTag
 ;
 
-62 #if–
+66 #if–
 c⁄figNUM_THREAD_LOCAL_STORAGE_POINTERS
  > 0 )
 
-63 *
+67 *
 	mpvThªadLoˇlSt‹agePoöãrs
 [ 
 c⁄figNUM_THREAD_LOCAL_STORAGE_POINTERS
  ];
 
-66 #i‡–
+70 #i‡–
 	tc⁄figGENERATE_RUN_TIME_STATS
  == 1 )
 
-67 
+71 
 	tuöt32_t
  
 	tulRunTimeCou¡î
 ;
 
-70 #i‡–
+74 #i‡–
 c⁄figUSE_NEWLIB_REENTRANT
  == 1 )
 
-78 
+82 
 _ªít
  
 	gxNewLib_ªít
 ;
 
-81 #i‡–
+85 #i‡–
 c⁄figUSE_TASK_NOTIFICATIONS
  == 1 )
 
-82 vﬁ©ûê
+86 vﬁ©ûê
 uöt32_t
  
 	gulNŸifõdVÆue
 ;
 
-83 vﬁ©ûê
+87 vﬁ©ûê
 eNŸifyVÆue
  
 	geNŸifySèã
 ;
 
-86 } 
+90 } 
 	gtskTCB
 ;
 
-87 
+91 
 SëRu¬ög
 ();
 
-92 
+96 
 tskTCB
  
 	tTCB_t
 ;
 
-93 
+97 
 	#èskYIELD_IF_USING_PREEMPTION
 (Ë
 	`p‹tYIELD_WITHIN_API
@@ -6260,16 +6414,28 @@ CÆlbackP¨amëîs_t
 ;
 
 35 
+¥vPro˚ssTimîOrBlockTask
+–c⁄° 
+TickTy≥_t
+ 
+xNextExpúeTime
+, 
+Ba£Ty≥_t
+ 
+xLi°WasEm±y
+ );
+
+36 
 	$¥vSëNextTimîI¡îru±
 ()
 
-37 
+38 
 __asm
  vﬁ©ûe("ldÅ0,0(%0)"::"r"
 mtimecmp
 );
 
-38 
+39 
 __asm
  vﬁ©ûe("addÅ0,t0,%0" :: "r"(
 c⁄figTICK_CLOCK_HZ
@@ -6277,27 +6443,27 @@ c⁄figTICK_CLOCK_HZ
 c⁄figTICK_RATE_HZ
 ));
 
-39 
+40 
 __asm
  vﬁ©ûe("sd %0,0—0)"::"r"
 mtimecmp
 );
 
-40 
+41 
 	}
 }
 
-43 
+44 
 	$vP‹tSëupTimî
 ()
 
-45 
+46 
 __asm
  vﬁ©ûe("ldÅ0,0(%0)"::"r"
 mtimecmp
 );
 
-46 
+47 
 __asm
  vﬁ©ûe("addÅ0,t0,%0"::"r"(
 c⁄figTICK_CLOCK_HZ
@@ -6305,77 +6471,77 @@ c⁄figTICK_CLOCK_HZ
 c⁄figTICK_RATE_HZ
 ));
 
-47 
+48 
 __asm
  vﬁ©ûe("sd %0,0—0)"::"r"
 mtimecmp
 );
 
-50 
+51 
 __asm
  volatile("csrs mie,%0"::"r"(0x80));
 
-51 
+52 
 	}
 }
 
-53 
+54 
 	$vP‹tSysTickH™dÀr
 ( )
 
-55 
+56 
 	`¥vSëNextTimîI¡îru±
 ();
 
-58 if–
+59 if–
 	`xTaskIn¸emítTick
 (Ë!
 pdFALSE
  )
 
-60 
+61 
 	`vTaskSwôchC⁄ãxt
 ();
 
-62 
+63 
 	}
 }
 
-63 
+64 
 	$¥vCheckF‹VÆidLi°AndQueue
 ( )
 
-65 if–
+66 if–
 xTimîQueue
  =
 NULL
  )
 
-67 
+68 
 	`vLi°Inôüli£
 –&
 xA˘iveTimîLi°1
  );
 
-68 
+69 
 	`vLi°Inôüli£
 –&
 xA˘iveTimîLi°2
  );
 
-69 
+70 
 pxCuºítTimîLi°
  = &
 xA˘iveTimîLi°1
 ;
 
-70 
+71 
 pxOvîÊowTimîLi°
  = &
 xA˘iveTimîLi°2
 ;
 
-71 
+72 
 xTimîQueue
  = 
 	`xQueueCª©e
@@ -6387,23 +6553,23 @@ c⁄figTIMER_QUEUE_LENGTH
 D´m⁄TaskMesßge_t
  ) );
 
-73 if–
+74 if–
 xTimîQueue
  !
 NULL
  )
 
-75 
+76 
 	`vQueueAddToRegi°ry
 –
 xTimîQueue
 , "TmrQ" );
 
-79 
+80 
 	}
 }
 
-80 
+81 
 TimîH™dÀ_t
  
 	$xTimîCª©e
@@ -6425,25 +6591,25 @@ TimîCÆlbackFun˘i⁄_t
 pxCÆlbackFun˘i⁄
  )
 
-82 
+83 
 Timî_t
  *
 pxNewTimî
 ;
 
-83 if–
+84 if–
 xTimîPîiodInTicks
  =–
 TickTy≥_t
  ) 0U )
 
-85 
+86 
 pxNewTimî
  = 
 NULL
 ;
 
-89 
+90 
 pxNewTimî
  = ( 
 Timî_t
@@ -6451,47 +6617,47 @@ Timî_t
 	`pvP‹tMÆloc
 ( ( Timer_t ) );
 
-90 if–
+91 if–
 pxNewTimî
  !
 NULL
  )
 
-94 
+95 
 	`¥vCheckF‹VÆidLi°AndQueue
 ();
 
-97 
+98 
 pxNewTimî
 ->
 pcTimîName
  =ÖcTimerName;
 
-98 
+99 
 pxNewTimî
 ->
 xTimîPîiodInTicks
  = xTimerPeriodInTicks;
 
-99 
+100 
 pxNewTimî
 ->
 uxAutoRñﬂd
  = uxAutoReload;
 
-100 
+101 
 pxNewTimî
 ->
 pvTimîID
  =ÖvTimerID;
 
-101 
+102 
 pxNewTimî
 ->
 pxCÆlbackFun˘i⁄
  =ÖxCallbackFunction;
 
-102 
+103 
 	`vLi°Inôüli£Iãm
 –&–
 pxNewTimî
@@ -6499,17 +6665,17 @@ pxNewTimî
 xTimîLi°Iãm
  ) );
 
-111  ( 
+112  ( 
 TimîH™dÀ_t
  ) 
 pxNewTimî
 ;
 
-113 
+114 
 	}
 }
 
-115 
+116 
 TickTy≥_t
  
 	$¥vGëNextExpúeTime
@@ -6519,13 +6685,13 @@ Ba£Ty≥_t
 pxLi°WasEm±y
  )
 
-117 
+118 
 TickTy≥_t
  
 xNextExpúeTime
 ;
 
-126 *
+127 *
 pxLi°WasEm±y
  = 
 	`li°LIST_IS_EMPTY
@@ -6533,13 +6699,13 @@ pxLi°WasEm±y
 pxCuºítTimîLi°
  );
 
-127 if–*
+128 if–*
 pxLi°WasEm±y
  =
 pdFALSE
  )
 
-129 
+130 
 xNextExpúeTime
  = 
 	`li°GET_ITEM_VALUE_OF_HEAD_ENTRY
@@ -6547,43 +6713,227 @@ xNextExpúeTime
 pxCuºítTimîLi°
  );
 
-134 
+135 
 xNextExpúeTime
  = ( 
 TickTy≥_t
  ) 0U;
 
-137  
+138  
 xNextExpúeTime
 ;
 
-138 
+139 
 	}
 }
 
-140 
+141 
 	$¥vTimîTask
 –*
 pvP¨amëîs
  )
 
-142 
+143 
 TickTy≥_t
  
 xNextExpúeTime
 ;
 
-143 
+144 
 Ba£Ty≥_t
  
 xLi°WasEm±y
 ;
 
-157 
+149 
+xNextExpúeTime
+ = 
+	`¥vGëNextExpúeTime
+–&
+xLi°WasEm±y
+ );
+
+153 
+	`¥vPro˚ssTimîOrBlockTask
+–
+xNextExpúeTime
+, 
+xLi°WasEm±y
+ );
+
+156 
+	`¥vPro˚ssRe˚ivedComm™ds
+();
+
+158 
 	}
 }
 
+161 
+TickTy≥_t
+ 
+	$¥vSam∂eTimeNow
+–
+Ba£Ty≥_t
+ * c⁄° 
+pxTimîLi°sWîeSwôched
+ )
+
+163 
+TickTy≥_t
+ 
+xTimeNow
+;
+
+164 
+TickTy≥_t
+ 
+xLa°Time
+ = ( TickType_t ) 0U;
+
 166 
+xTimeNow
+ = 
+	`xTaskGëTickCou¡
+();
+
+168 if–
+xTimeNow
+ < 
+xLa°Time
+ )
+
+170 
+	`¥vSwôchTimîLi°s
+();
+
+171 *
+pxTimîLi°sWîeSwôched
+ = 
+pdTRUE
+;
+
+175 *
+pxTimîLi°sWîeSwôched
+ = 
+pdFALSE
+;
+
+178 
+xLa°Time
+ = 
+xTimeNow
+;
+
+180  
+xTimeNow
+;
+
+181 
+	}
+}
+
+184 
+	$¥vPro˚ssTimîOrBlockTask
+–c⁄° 
+TickTy≥_t
+ 
+xNextExpúeTime
+, 
+Ba£Ty≥_t
+ 
+xLi°WasEm±y
+ )
+
+186 
+TickTy≥_t
+ 
+xTimeNow
+;
+
+187 
+Ba£Ty≥_t
+ 
+xTimîLi°sWîeSwôched
+;
+
+188 
+xTimeNow
+ = 
+	`¥vSam∂eTimeNow
+–&
+xTimîLi°sWîeSwôched
+ );
+
+189 if–
+xTimîLi°sWîeSwôched
+ =
+pdFALSE
+ )
+
+192 if––
+xLi°WasEm±y
+ =
+pdFALSE
+ ) && ( 
+xNextExpúeTime
+ <
+xTimeNow
+ ) )
+
+194 –Ë
+	`xTaskResumeAŒ
+();
+
+195 
+	`¥vPro˚ssExpúedTimî
+–
+xNextExpúeTime
+, 
+xTimeNow
+ );
+
+199 if–
+xLi°WasEm±y
+ !
+pdFALSE
+ )
+
+201 
+xLi°WasEm±y
+ = 
+	`li°LIST_IS_EMPTY
+–
+pxOvîÊowTimîLi°
+ );
+
+204 
+	`vQueueWaôF‹MesßgeRe°ri˘ed
+–
+xTimîQueue
+, ( 
+xNextExpúeTime
+ - 
+xTimeNow
+ ), 
+xLi°WasEm±y
+ );
+
+206 if–
+	`xTaskResumeAŒ
+(Ë=
+pdFALSE
+ )
+
+208 
+	`p‹tYIELD_WITHIN_API
+();
+
+212 
+	}
+}
+
+217 
 Ba£Ty≥_t
  
 	$xTimîGíîicComm™d
@@ -6605,7 +6955,7 @@ pxHighîPri‹ôyTaskWokí
 xTicksToWaô
  )
 
-168 
+219 
 Ba£Ty≥_t
  
 xRëu∫
@@ -6613,19 +6963,19 @@ xRëu∫
 pdFAIL
 ;
 
-169 
+220 
 D´m⁄TaskMesßge_t
  
 xMesßge
 ;
 
-170 if–
+221 if–
 xTimîQueue
  !
 NULL
  )
 
-173 
+224 
 xMesßge
 .
 xMesßgeID
@@ -6633,7 +6983,7 @@ xMesßgeID
 xComm™dID
 ;
 
-174 
+225 
 xMesßge
 .
 u
@@ -6645,7 +6995,7 @@ xMesßgeVÆue
 xO±i⁄ÆVÆue
 ;
 
-175 
+226 
 xMesßge
 .
 u
@@ -6659,19 +7009,19 @@ Timî_t
 xTimî
 ;
 
-177 if–
+228 if–
 xComm™dID
  < 
 tmrFIRST_FROM_ISR_COMMAND
  )
 
-179 if–
+230 if–
 	`xTaskGëScheduÀrSèã
 (Ë=
 èskSCHEDULER_RUNNING
  )
 
-181 
+232 
 xRëu∫
  = 
 	`xQueueSídToBack
@@ -6683,7 +7033,7 @@ xMesßge
 xTicksToWaô
  );
 
-185 
+236 
 xRëu∫
  = 
 	`xQueueSídToBack
@@ -6693,7 +7043,7 @@ xTimîQueue
 xMesßge
 , 0 );
 
-190 
+241 
 xRëu∫
  = 
 	`xQueueSídToBackFromISR
@@ -6705,21 +7055,21 @@ xMesßge
 pxHighîPri‹ôyTaskWokí
  );
 
-193  
+244  
 xRëu∫
 ;
 
-194 
+245 
 	}
 }
 
-195 
+246 
 Ba£Ty≥_t
  
 	$xTimîCª©eTimîTask
 ( )
 
-198 
+249 
 Ba£Ty≥_t
  
 xRëu∫
@@ -6727,17 +7077,17 @@ xRëu∫
 pdFAIL
 ;
 
-199 
+250 
 	`¥vCheckF‹VÆidLi°AndQueue
 ();
 
-200 if–
+251 if–
 xTimîQueue
  !
 NULL
  )
 
-202 
+253 
 xRëu∫
  = 
 	`xTaskCª©e
@@ -6757,11 +7107,321 @@ c⁄figTIMER_TASK_PRIORITY
 p‹tPRIVILEGE_BIT
 , NULL);
 
-204  
+255  
 xRëu∫
 ;
 
-205 
+256 
+	}
+}
+
+261 
+	$¥vPro˚ssRe˚ivedComm™ds
+( )
+
+263 
+D´m⁄TaskMesßge_t
+ 
+xMesßge
+;
+
+264 
+Timî_t
+ *
+pxTimî
+;
+
+265 
+Ba£Ty≥_t
+ 
+xTimîLi°sWîeSwôched
+, 
+xResu…
+;
+
+266 
+TickTy≥_t
+ 
+xTimeNow
+;
+
+268  
+	`xQueueRe˚ive
+–
+xTimîQueue
+, &
+xMesßge
+, 
+tmrNO_DELAY
+ ) !
+pdFAIL
+ )
+
+270 #i‡–
+INCLUDE_xTimîPídFun˘i⁄CÆl
+ == 1 )
+
+272 if–
+xMesßge
+.
+xMesßgeID
+ < ( 
+Ba£Ty≥_t
+ ) 0 )
+
+274 c⁄° 
+CÆlbackP¨amëîs_t
+ * c⁄° 
+pxCÆlback
+ = &–
+xMesßge
+.
+u
+.
+xCÆlbackP¨amëîs
+ );
+
+276 
+	`c⁄figASSERT
+–
+pxCÆlback
+ );
+
+278 
+pxCÆlback
+->
+	`pxCÆlbackFun˘i⁄
+–pxCÆlback->
+pvP¨amëî1
+,ÖxCÆlback->
+ulP¨amëî2
+ );
+
+282 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+286 if–
+xMesßge
+.
+xMesßgeID
+ >–
+Ba£Ty≥_t
+ ) 0 )
+
+288 
+pxTimî
+ = 
+xMesßge
+.
+u
+.
+xTimîP¨amëîs
+.pxTimer;
+
+290 if–
+	`li°IS_CONTAINED_WITHIN
+–
+NULL
+, &–
+pxTimî
+->
+xTimîLi°Iãm
+ ) ) =
+pdFALSE
+ )
+
+292 –Ë
+	`uxLi°Remove
+–&–
+pxTimî
+->
+xTimîLi°Iãm
+ ) );
+
+296 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+299 
+xTimeNow
+ = 
+	`¥vSam∂eTimeNow
+–&
+xTimîLi°sWîeSwôched
+ );
+
+301  
+xMesßge
+.
+xMesßgeID
+ )
+
+303 
+tmrCOMMAND_START
+ :
+
+304 
+tmrCOMMAND_START_FROM_ISR
+ :
+
+305 
+tmrCOMMAND_RESET
+ :
+
+306 
+tmrCOMMAND_RESET_FROM_ISR
+ :
+
+307 
+tmrCOMMAND_START_DONT_TRACE
+ :
+
+308 if–
+	`¥vIn£πTimîInA˘iveLi°
+–
+pxTimî
+, 
+xMesßge
+.
+u
+.
+xTimîP¨amëîs
+.
+xMesßgeVÆue
+ +ÖxTimî->
+xTimîPîiodInTicks
+, 
+xTimeNow
+, xMesßge.u.xTimîP¨amëîs.xMesßgeVÆuêË=
+pdTRUE
+ )
+
+310 
+pxTimî
+->
+	`pxCÆlbackFun˘i⁄
+––
+TimîH™dÀ_t
+ )ÖxTimer );
+
+311 
+	`åa˚TIMER_EXPIRED
+–
+pxTimî
+ );
+
+313 if–
+pxTimî
+->
+uxAutoRñﬂd
+ =–
+UBa£Ty≥_t
+ ) 
+pdTRUE
+ )
+
+315 
+xResu…
+ = 
+	`xTimîGíîicComm™d
+–
+pxTimî
+, 
+tmrCOMMAND_START_DONT_TRACE
+, 
+xMesßge
+.
+u
+.
+xTimîP¨amëîs
+.
+xMesßgeVÆue
+ +ÖxTimî->
+xTimîPîiodInTicks
+, 
+NULL
+, 
+tmrNO_DELAY
+ );
+
+316 
+	`c⁄figASSERT
+–
+xResu…
+ );
+
+317 –Ë
+xResu…
+;
+
+321 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+326 
+	`mtCOVERAGE_TEST_MARKER
+();
+
+330 
+tmrCOMMAND_STOP
+ :
+
+331 
+tmrCOMMAND_STOP_FROM_ISR
+ :
+
+334 
+tmrCOMMAND_CHANGE_PERIOD
+ :
+
+335 
+tmrCOMMAND_CHANGE_PERIOD_FROM_ISR
+ :
+
+336 
+pxTimî
+->
+xTimîPîiodInTicks
+ = 
+xMesßge
+.
+u
+.
+xTimîP¨amëîs
+.
+xMesßgeVÆue
+;
+
+337 
+	`c⁄figASSERT
+––
+pxTimî
+->
+xTimîPîiodInTicks
+ > 0 ) );
+
+339 –Ë
+	`¥vIn£πTimîInA˘iveLi°
+–
+pxTimî
+, ( 
+xTimeNow
+ +ÖxTimî->
+xTimîPîiodInTicks
+ ), xTimeNow, xTimeNow );
+
+341 
+tmrCOMMAND_DELETE
+ :
+
+342 
+	`vP‹tFªe
+–
+pxTimî
+ );
+
+350 
 	}
 }
 

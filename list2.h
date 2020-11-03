@@ -39,6 +39,7 @@ typedef struct xLIST
 #define listSET_LIST_ITEM_VALUE( pxListItem, xValue )   ( ( pxListItem )->xItemValue = ( xValue ) )
 #define listGET_LIST_ITEM_VALUE( pxListItem )   ( ( pxListItem )->xItemValue )
 #define listCURRENT_LIST_LENGTH( pxList )   ( ( pxList )->uxNumberOfItems )
+#define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( BaseType_t ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) ) )
 #define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )  ( ( ( pxList )->xListEnd ).pxNext->xItemValue )
 #define listLIST_ITEM_CONTAINER( pxListItem ) ( ( pxListItem )->pvContainer )
 #define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )                                        \

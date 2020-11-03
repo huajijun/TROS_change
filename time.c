@@ -8,6 +8,7 @@ static List_t *pxCurrentTimerList;
 static List_t *pxOverflowTimerList;
 
 static QueueHandle_t xTimerQueue = NULL;
+#define tmrNO_DELAY		( TickType_t ) 0U
 
 typedef struct tmrTimerParameters      
 {                                      
@@ -28,24 +29,28 @@ typedef struct tmrTimerQueueMessage
             CallbackParameters_t xCallbackParameters;                                                 
         #endif /* INCLUDE_xTimerPendFunctionCall */                                                   
     } u;                                                                                              
-} DaemonTaskMessage_t;                                                                                
+} DaemonTaskMessage_t;             
 
+static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const TickType_t xNextExpiryTime, const TickType_t xTimeNow, const TickType_t xCommandTime );                                                                   
 
+static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow );
 
+static void prvSwitchTimerLists( void );
+static void prvProcessReceivedCommands( void );
 static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty ); 
 static void prvSetNextTimerInterrupt(void)
 {
 	__asm volatile("ld t0,0(%0)"::"r"mtimecmp);
 	__asm volatile("add t0,t0,%0" :: "r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	__asm volatile("sd %0,0(t0)"::"r"mtimecmp);
+	__asm volatile("sd t0,0(%0)"::"r"mtimecmp);
 }
 
 /* Sets and enable the timer interrupt */                                           
 void vPortSetupTimer(void)                                                          
 {                                                                                
-  __asm volatile("ld t0,0(%0)"::"r"mtimecmp);
+  __asm volatile("ld t0,0(%0)"::"r"mtime);
   __asm volatile("add t0,t0,%0"::"r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));  
-  __asm volatile("sd %0,0(t0)"::"r"mtimecmp);
+  __asm volatile("sd t0,0(%0)"::"r"mtimecmp);
                                                                                    
    /* Enable timer interupt */                                                     
    __asm volatile("csrs mie,%0"::"r"(0x80));                                       
@@ -273,16 +278,10 @@ TickType_t xTimeNow;
             {
                 const CallbackParameters_t * const pxCallback = &( xMessage.u.xCallbackParameters );
 
-                configASSERT( pxCallback );
-
                 pxCallback->pxCallbackFunction( pxCallback->pvParameter1, pxCallback->ulParameter2 );
             }
-            else
-            {
-                mtCOVERAGE_TEST_MARKER();
-            }
         }
-	#endif
+		#endif
 	if( xMessage.xMessageID >= ( BaseType_t ) 0 )
 	{
 		pxTimer = xMessage.u.xTimerParameters.pxTimer;
@@ -291,11 +290,6 @@ TickType_t xTimeNow;
 		{
 			( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-
 		xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
 
 		switch( xMessage.xMessageID )
@@ -308,22 +302,13 @@ TickType_t xTimeNow;
 					if( prvInsertTimerInActiveList( pxTimer,  xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.u.xTimerParameters.xMessageValue ) == pdTRUE )
 					{
 						pxTimer->pxCallbackFunction( ( TimerHandle_t ) pxTimer );
-						traceTIMER_EXPIRED( pxTimer );
 
 						if( pxTimer->uxAutoReload == ( UBaseType_t ) pdTRUE )
 						{
 							xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
-							configASSERT( xResult );
 							( void ) xResult;
 						}
-						else
-						{
-							mtCOVERAGE_TEST_MARKER();
-						}
-					}
-					else
-					{
-						mtCOVERAGE_TEST_MARKER();
+
 					}
 					break;
 
@@ -334,7 +319,6 @@ TickType_t xTimeNow;
 				case tmrCOMMAND_CHANGE_PERIOD :
 				case tmrCOMMAND_CHANGE_PERIOD_FROM_ISR :
 					pxTimer->xTimerPeriodInTicks = xMessage.u.xTimerParameters.xMessageValue;
-					configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
 
 					( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
 					break;
@@ -349,6 +333,108 @@ TickType_t xTimeNow;
 	}
 }
 
+static void prvSwitchTimerLists( void )
+{
+	TickType_t xNextExpireTime, xReloadTime;
+	List_t *pxTemp;
+	Timer_t *pxTimer;
+	BaseType_t xResult;                      
+	while( listLIST_IS_EMPTY( pxCurrentTimerList ) == pdFALSE )                   
+	{    
+    	xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList ); 
+     
+    /* Remove the timer from the list. */                                     
+    	pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
+    	( void ) uxListRemove( &( pxTimer->xTimerListItem ) );                    
+    	pxTimer->pxCallbackFunction( ( TimerHandle_t ) pxTimer );
+    	if( pxTimer->uxAutoReload == ( UBaseType_t ) pdTRUE )                                                              
+		{                                                                                                                  
+	                                                                           
+		    xReloadTime = ( xNextExpireTime + pxTimer->xTimerPeriodInTicks );                                              
+		    if( xReloadTime > xNextExpireTime )                                                                            
+		    {                                                                                                              
+		        listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xReloadTime );                                      
+		        listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );                                          
+		        vListInsert( pxCurrentTimerList, &( pxTimer->xTimerListItem ) );                                           
+		    }                                                                                                              
+		    else                                                                                                           
+		    {                                                                                                              
+		        xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xNextExpireTime, NULL, tmrNO_DELAY );                                                                                   
+		        ( void ) xResult;                                                                                          
+		    }                                                                                                              
+		} 
+	}
+	pxTemp = pxCurrentTimerList;   
+	pxCurrentTimerList = pxOverflowTimerList;
+	pxOverflowTimerList = pxTemp;       
+}
 
 
 
+
+static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow )                                           
+{                     
+BaseType_t xResult;   
+Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );                                                  
+                      
+    /* Remove the timer from the list of active timers.  A check has already                                                                
+    been performed to ensure the list is not empty. */                                                                                      
+    ( void ) uxListRemove( &( pxTimer->xTimerListItem ) );                                                                                                                                                                                           
+                      
+    /* If the timer is an auto reload timer then calculate the next                                                                         
+    expiry time and re-insert the timer in the list of active timers. */                                                                    
+    if( pxTimer->uxAutoReload == ( UBaseType_t ) pdTRUE )                                                                                   
+    {                 
+        /* The timer is inserted into a list using a time relative to anything                                                              
+        other than the current time.  It will therefore be inserted into the                                                                
+        correct list relative to the time this task thinks it is now. */                                                                    
+        if( prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow, xNextExpireTime ) == pdTRUE )
+        {             
+            /* The timer expired before it was added to the active timer                                                                    
+            list.  Reload it now.  */                                                                                                       
+            xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xNextExpireTime, NULL, tmrNO_DELAY );                     
+                                                                                                               
+        }                   
+    }                             
+    /* Call the timer callback. */                                                                                                          
+    pxTimer->pxCallbackFunction( ( TimerHandle_t ) pxTimer );                                                                               
+}                     
+static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const TickType_t xNextExpiryTime, const TickType_t xTimeNow, const TickType_t xCommandTime ) 
+{                                                                          
+	BaseType_t xProcessTimerNow = pdFALSE;                                     
+                                                                           
+    listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xNextExpiryTime );
+    listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );      
+                                                                           
+    if( xNextExpiryTime <= xTimeNow )                                      
+    {                                                                      
+        /* Has the expiry time elapsed between the command to start/reset a
+        timer was issued, and the time the command was processed? */       
+        if( ( xTimeNow - xCommandTime ) >= pxTimer->xTimerPeriodInTicks )  
+        {                                                                  
+            /* The time between a command being issued and the command being
+            processed actually exceeds the timers period.  */              
+            xProcessTimerNow = pdTRUE;                                     
+        }                                                                                                                                                           
+        else                                                               
+        {                                                                  
+            vListInsert( pxOverflowTimerList, &( pxTimer->xTimerListItem ) );
+        }                                                                  
+    }                                                                      
+    else                                                                   
+    {                                                                      
+        if( ( xTimeNow < xCommandTime ) && ( xNextExpiryTime >= xCommandTime ) ) 
+        {                                                                  
+            /* If, since the command was issued, the tick count has overflowed
+            but the expiry time has not, then the timer must have already passed
+            its expiry time and should be processed immediately. */        
+            xProcessTimerNow = pdTRUE;                                     
+        }                                                                  
+        else                                                               
+        {                                                                  
+            vListInsert( pxCurrentTimerList, &( pxTimer->xTimerListItem ) );
+        }                                                                  
+    }                                                                      
+                                                                           
+    return xProcessTimerNow;                                               
+}                                                                          
