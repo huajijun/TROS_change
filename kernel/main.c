@@ -1,8 +1,8 @@
-#include "heap2.h"
-#include "queue2.h"
-#include "common.h"
-#include "task.h"
-#include "time.h"
+#include <heap2.h>
+#include <queue2.h>
+#include <common.h>
+#include <task.h>
+#include <time.h>
 
 #define mainCHECK_TIMER_PERIOD_MS           ( 3000UL / portTICK_PERIOD_MS )
 #define mainDONT_BLOCK                      ( 0UL )	

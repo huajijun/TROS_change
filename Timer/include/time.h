@@ -1,5 +1,5 @@
-#include "common.h"
-#include "list2.h"
+#include <common.h>
+#include <list2.h>
 #define CSR_MIE             (0x304)
 #define CSR_MTVEC           (0x305)
 #define mtimecmp	    (0x2004000)

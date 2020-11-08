@@ -1,4 +1,4 @@
-#include "encoding.h"
+#include <encoding.h>
 .align 6
 .section .text,"ax"
     machine_trap_entry:

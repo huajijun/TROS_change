@@ -1,6 +1,6 @@
-#include "common.h"
-#include "list2.h"
-#include "queue2.h"
+#include <common.h>
+#include <list2.h>
+#include <queue2.h>
 #ifndef TASK
 #define TASK
 #define xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( NULL ), ( NULL ) )
